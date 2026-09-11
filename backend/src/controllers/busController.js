@@ -80,15 +80,25 @@ async function createBus(req, res) {
     }
 
     if (isLive()) {
+      // Check bus_number uniqueness
+      const existing = await query('SELECT id FROM buses WHERE bus_number = ?', [bus_number]);
+      if (existing && existing.length > 0) {
+        return res.status(409).json({ success: false, message: `Bus number "${bus_number}" is already in use. Please choose a different number.` });
+      }
       const result = await query(
         'INSERT INTO buses (bus_number, license_plate, capacity, model, status, assigned_driver_id, current_route_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [bus_number, license_plate, capacity, model, status, assigned_driver_id || null, current_route_id || null]
       );
       return res.status(201).json({ success: true, message: 'Bus created', id: result.insertId });
     } else {
+      // Check bus_number uniqueness in memory
+      const conflict = memoryStore.buses.find(b => b.bus_number === String(bus_number));
+      if (conflict) {
+        return res.status(409).json({ success: false, message: `Bus number "${bus_number}" is already in use. Choose a different number.` });
+      }
       const newBus = {
         id: memoryStore.buses.length + 1,
-        bus_number,
+        bus_number: String(bus_number),
         license_plate,
         capacity: Number(capacity),
         model,
@@ -105,12 +115,20 @@ async function createBus(req, res) {
   }
 }
 
+
 async function updateBus(req, res) {
   try {
     const { id } = req.params;
     const { bus_number, license_plate, capacity, model, status, assigned_driver_id, current_route_id } = req.body;
 
     if (isLive()) {
+      // Check bus_number uniqueness (excluding this bus)
+      if (bus_number) {
+        const conflict = await query('SELECT id FROM buses WHERE bus_number = ? AND id != ?', [bus_number, id]);
+        if (conflict && conflict.length > 0) {
+          return res.status(409).json({ success: false, message: `Bus number "${bus_number}" is already taken by another bus.` });
+        }
+      }
       await query(
         'UPDATE buses SET bus_number = COALESCE(?, bus_number), license_plate = COALESCE(?, license_plate), capacity = COALESCE(?, capacity), model = COALESCE(?, model), status = COALESCE(?, status), assigned_driver_id = ?, current_route_id = ? WHERE id = ?',
         [bus_number, license_plate, capacity, model, status, assigned_driver_id || null, current_route_id || null, id]
@@ -119,7 +137,16 @@ async function updateBus(req, res) {
     } else {
       const bus = memoryStore.buses.find(b => b.id === Number(id));
       if (!bus) return res.status(404).json({ success: false, message: 'Bus not found' });
-      if (bus_number) bus.bus_number = bus_number;
+
+      // Check bus_number uniqueness in memory (excluding this bus)
+      if (bus_number && String(bus_number) !== bus.bus_number) {
+        const conflict = memoryStore.buses.find(b => b.id !== Number(id) && b.bus_number === String(bus_number));
+        if (conflict) {
+          return res.status(409).json({ success: false, message: `Bus number "${bus_number}" is already taken by another bus.` });
+        }
+      }
+
+      if (bus_number) bus.bus_number = String(bus_number);
       if (license_plate) bus.license_plate = license_plate;
       if (capacity) bus.capacity = Number(capacity);
       if (model) bus.model = model;
@@ -132,6 +159,7 @@ async function updateBus(req, res) {
     return res.status(500).json({ success: false, message: err.message });
   }
 }
+
 
 async function deleteBus(req, res) {
   try {

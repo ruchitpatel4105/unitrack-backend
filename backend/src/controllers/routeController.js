@@ -108,13 +108,25 @@ async function createRoute(req, res) {
 async function updateRoute(req, res) {
   try {
     const { id } = req.params;
-    const { route_name, route_code, description, start_point, end_point, estimated_duration_mins, distance_km, is_active } = req.body;
+    const { route_name, route_code, description, start_point, end_point, estimated_duration_mins, distance_km, is_active, stops } = req.body;
 
     if (isLive()) {
       await query(
         'UPDATE routes SET route_name = COALESCE(?, route_name), route_code = COALESCE(?, route_code), description = COALESCE(?, description), start_point = COALESCE(?, start_point), end_point = COALESCE(?, end_point), estimated_duration_mins = COALESCE(?, estimated_duration_mins), distance_km = COALESCE(?, distance_km), is_active = COALESCE(?, is_active) WHERE id = ?',
         [route_name, route_code, description, start_point, end_point, estimated_duration_mins, distance_km, is_active, id]
       );
+
+      // Replace stops if provided
+      if (stops && Array.isArray(stops)) {
+        await query('DELETE FROM route_stops WHERE route_id = ?', [id]);
+        for (let i = 0; i < stops.length; i++) {
+          const s = stops[i];
+          await query(
+            'INSERT INTO route_stops (route_id, stop_name, stop_order, latitude, longitude, estimated_time_offset_mins) VALUES (?, ?, ?, ?, ?, ?)',
+            [id, s.stop_name, s.stop_order || (i + 1), s.latitude || 22.2887, s.longitude || 73.3634, s.estimated_time_offset_mins || 0]
+          );
+        }
+      }
       return res.status(200).json({ success: true, message: 'Route updated' });
     } else {
       const route = memoryStore.routes.find(r => r.id === Number(id));
@@ -127,6 +139,27 @@ async function updateRoute(req, res) {
       if (estimated_duration_mins) route.estimated_duration_mins = Number(estimated_duration_mins);
       if (distance_km) route.distance_km = Number(distance_km);
       if (is_active !== undefined) route.is_active = Number(is_active);
+
+      // Replace stops if provided
+      if (stops && Array.isArray(stops)) {
+        // Remove existing stops for this route
+        const removeIndices = [];
+        memoryStore.route_stops.forEach((s, idx) => { if (s.route_id === Number(id)) removeIndices.push(idx); });
+        removeIndices.reverse().forEach(idx => memoryStore.route_stops.splice(idx, 1));
+
+        // Insert new stops
+        stops.forEach((s, i) => {
+          memoryStore.route_stops.push({
+            id: (memoryStore.route_stops.length > 0 ? Math.max(...memoryStore.route_stops.map(x => x.id)) : 0) + 1,
+            route_id: Number(id),
+            stop_name: s.stop_name,
+            stop_order: s.stop_order || (i + 1),
+            latitude: Number(s.latitude) || 22.2887,
+            longitude: Number(s.longitude) || 73.3634,
+            estimated_time_offset_mins: Number(s.estimated_time_offset_mins || 0)
+          });
+        });
+      }
       return res.status(200).json({ success: true, message: 'Route updated', data: route });
     }
   } catch (err) {
@@ -142,6 +175,10 @@ async function deleteRoute(req, res) {
     } else {
       const idx = memoryStore.routes.findIndex(r => r.id === Number(id));
       if (idx !== -1) memoryStore.routes.splice(idx, 1);
+      // Also remove stops
+      const stopsToRemove = [];
+      memoryStore.route_stops.forEach((s, i) => { if (s.route_id === Number(id)) stopsToRemove.push(i); });
+      stopsToRemove.reverse().forEach(i => memoryStore.route_stops.splice(i, 1));
     }
     return res.status(200).json({ success: true, message: 'Route deleted successfully' });
   } catch (err) {
@@ -156,3 +193,4 @@ module.exports = {
   updateRoute,
   deleteRoute
 };
+

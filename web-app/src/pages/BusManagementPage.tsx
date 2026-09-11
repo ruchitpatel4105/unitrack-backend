@@ -216,30 +216,58 @@ export const BusManagementPage: React.FC = () => {
             </h3>
             <p className="text-xs text-slate-500 mb-6">Enter vehicle registration, capacity, and operational routing.</p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Bus Number</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. BUS-104"
+             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Bus Number — smart picker */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Bus Number *</label>
+                <div className="flex gap-2">
+                  {/* Quick select: taken numbers shown in red, available in green */}
+                  <select
                     value={formData.bus_number}
                     onChange={(e) => setFormData({ ...formData, bus_number: e.target.value })}
-                    className="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">License Plate</label>
+                    className="w-36 text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none shrink-0"
+                  >
+                    <option value="">Pick #</option>
+                    {Array.from({ length: 20 }, (_, i) => String(i + 1)).map((num) => {
+                      const takenByOther = buses.some(b => b.bus_number === num && (!editingBus || b.id !== editingBus.id));
+                      return (
+                        <option key={num} value={num} disabled={takenByOther} style={{ color: takenByOther ? '#ef4444' : '#16a34a' }}>
+                          {takenByOther ? `${num} — taken` : `${num} — available`}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {/* Or type manually */}
                   <input
                     type="text"
                     required
-                    placeholder="e.g. KA-01-EQ-1234"
-                    value={formData.license_plate}
-                    onChange={(e) => setFormData({ ...formData, license_plate: e.target.value })}
-                    className="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
+                    placeholder="or type custom number"
+                    value={formData.bus_number}
+                    onChange={(e) => setFormData({ ...formData, bus_number: e.target.value })}
+                    className={`flex-1 text-xs border rounded-xl p-2.5 outline-none focus:ring-2 ${
+                      formData.bus_number && buses.some(b => b.bus_number === formData.bus_number && (!editingBus || b.id !== editingBus.id))
+                        ? 'border-red-400 focus:ring-red-400 bg-red-50'
+                        : 'border-slate-300 focus:ring-emerald-500'
+                    }`}
                   />
                 </div>
+                {/* Conflict warning */}
+                {formData.bus_number && buses.some(b => b.bus_number === formData.bus_number && (!editingBus || b.id !== editingBus.id)) && (
+                  <p className="text-xs text-red-600 mt-1 font-medium">⚠ Bus number "{formData.bus_number}" is already in use. Please choose a different number.</p>
+                )}
+                <p className="text-[10px] text-slate-400 mt-1">Numbers 1–20 shown above. Green = available, red = taken. You can also type any custom number.</p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">License Plate *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. GJ-06-PU-0005"
+                  value={formData.license_plate}
+                  onChange={(e) => setFormData({ ...formData, license_plate: e.target.value })}
+                  className="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">

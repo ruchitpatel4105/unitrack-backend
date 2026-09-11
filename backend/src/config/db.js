@@ -68,11 +68,37 @@ const memoryStore = {
       role: 'driver',
       name: 'David Wilson',
       email: 'david.w@driver.unitrack.edu',
-      phone: '+19876543214',
+      phone: '+919876543214',
       student_id: null,
       driver_id: 'DRV-102',
       password_hash: '$2b$10$epRfZG5m/k0zN8MhE5L7p.UaZcT5xWp91mR2hS1F6qL0xZ.7wU6iS',
       avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+      fcm_token: null,
+      created_at: new Date()
+    },
+    {
+      id: 6,
+      role: 'driver',
+      name: 'Ramesh Patel',
+      email: 'ramesh.p@driver.unitrack.edu',
+      phone: '+919876543215',
+      student_id: null,
+      driver_id: 'DRV-103',
+      password_hash: '$2b$10$epRfZG5m/k0zN8MhE5L7p.UaZcT5xWp91mR2hS1F6qL0xZ.7wU6iS',
+      avatar_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+      fcm_token: null,
+      created_at: new Date()
+    },
+    {
+      id: 7,
+      role: 'driver',
+      name: 'Suresh Chauhan',
+      email: 'suresh.c@driver.unitrack.edu',
+      phone: '+919876543216',
+      student_id: null,
+      driver_id: 'DRV-104',
+      password_hash: '$2b$10$epRfZG5m/k0zN8MhE5L7p.UaZcT5xWp91mR2hS1F6qL0xZ.7wU6iS',
+      avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
       fcm_token: null,
       created_at: new Date()
     }
@@ -80,60 +106,82 @@ const memoryStore = {
   routes: [
     {
       id: 1,
-      route_name: 'Parul Campus Express - North Loop',
-      route_code: 'PU-EXP-101',
-      description: 'Campus loop covering Main Gate, Engineering Quad, and Parul Sevashram Hospital',
-      start_point: 'Parul Main Gate & Admin Block',
-      end_point: 'Hostel Enclaves & Sports Pavilion',
-      estimated_duration_mins: 20,
-      distance_km: 6.50,
+      route_name: 'Vadodara Station Express',
+      route_code: 'RT-001',
+      description: 'Vadodara Railway Station to Parul University via Waghodia Road',
+      start_point: 'Vadodara Railway Station',
+      end_point: 'Parul University Main Gate',
+      estimated_duration_mins: 45,
+      distance_km: 18.5,
       is_active: 1
     },
     {
       id: 2,
-      route_name: 'Vadodara Station - Parul Campus Shuttle',
-      route_code: 'PU-CTY-202',
-      description: 'Connecting Vadodara Central Station to Parul University Campus Terminal',
-      start_point: 'Vadodara Railway Station',
-      end_point: 'Parul Main Gate Terminal',
+      route_name: 'Sama / Gorwa Route',
+      route_code: 'RT-002',
+      description: 'Sama Road and Gorwa area to Parul University Campus',
+      start_point: 'Sama Road BRTS Stop',
+      end_point: 'Parul University Main Gate',
       estimated_duration_mins: 40,
-      distance_km: 17.80,
+      distance_km: 16.2,
       is_active: 1
     },
     {
       id: 3,
-      route_name: 'East Campus & Medical Circulator',
-      route_code: 'PU-CIRC-303',
-      description: 'Internal shuttle for Hostels, Library, and Parul Sevashram Medical Quad',
-      start_point: 'Hostel Block A',
-      end_point: 'Parul Sevashram Hospital',
-      estimated_duration_mins: 15,
-      distance_km: 4.20,
+      route_name: 'Karelibaug / Fatehgunj Route',
+      route_code: 'RT-003',
+      description: 'Karelibaug and Fatehgunj area to Parul University via Subhanpura',
+      start_point: 'Karelibaug Circle',
+      end_point: 'Parul University Main Gate',
+      estimated_duration_mins: 50,
+      distance_km: 20.1,
+      is_active: 1
+    },
+    {
+      id: 4,
+      route_name: 'Waghodia / Padra Route',
+      route_code: 'RT-004',
+      description: 'Waghodia town and Padra road corridor to Parul University',
+      start_point: 'Waghodia Bus Stand',
+      end_point: 'Parul University Main Gate',
+      estimated_duration_mins: 35,
+      distance_km: 12.8,
       is_active: 1
     }
   ],
   route_stops: [
-    { id: 1, route_id: 1, stop_name: 'Parul Main Gate & Admin Block', stop_order: 1, latitude: 22.288700, longitude: 73.363400, estimated_time_offset_mins: 0 },
-    { id: 2, route_id: 1, stop_name: 'Faculty of Engineering & IT', stop_order: 2, latitude: 22.289500, longitude: 73.364800, estimated_time_offset_mins: 5 },
-    { id: 3, route_id: 1, stop_name: 'Parul Sevashram Hospital', stop_order: 3, latitude: 22.290800, longitude: 73.362000, estimated_time_offset_mins: 10 },
-    { id: 4, route_id: 1, stop_name: 'Central Library & SAC', stop_order: 4, latitude: 22.287800, longitude: 73.361200, estimated_time_offset_mins: 15 },
-    { id: 5, route_id: 1, stop_name: 'Hostel Enclaves & Sports Pavilion', stop_order: 5, latitude: 22.286200, longitude: 73.364000, estimated_time_offset_mins: 20 },
+    // Route 1: Vadodara Station Express
+    { id: 1,  route_id: 1, stop_name: 'Vadodara Railway Station',  stop_order: 1, latitude: 22.3119, longitude: 73.1820, estimated_time_offset_mins: 0 },
+    { id: 2,  route_id: 1, stop_name: 'Sayajigunj Circle',         stop_order: 2, latitude: 22.3090, longitude: 73.1890, estimated_time_offset_mins: 8 },
+    { id: 3,  route_id: 1, stop_name: 'Subhanpura Crossroads',     stop_order: 3, latitude: 22.3020, longitude: 73.2200, estimated_time_offset_mins: 18 },
+    { id: 4,  route_id: 1, stop_name: 'Waghodia Crossroads',       stop_order: 4, latitude: 22.2965, longitude: 73.2380, estimated_time_offset_mins: 30 },
+    { id: 5,  route_id: 1, stop_name: 'Parul University Main Gate',stop_order: 5, latitude: 22.2887, longitude: 73.3634, estimated_time_offset_mins: 45 },
 
-    { id: 6, route_id: 2, stop_name: 'Vadodara Central Station', stop_order: 1, latitude: 22.310800, longitude: 73.181200, estimated_time_offset_mins: 0 },
-    { id: 7, route_id: 2, stop_name: 'Sayajigunj Circle', stop_order: 2, latitude: 22.312000, longitude: 73.190500, estimated_time_offset_mins: 8 },
-    { id: 8, route_id: 2, stop_name: 'Fatehgunj Flyover', stop_order: 3, latitude: 22.321000, longitude: 73.195000, estimated_time_offset_mins: 18 },
-    { id: 9, route_id: 2, stop_name: 'Waghodia Cross Roads', stop_order: 4, latitude: 22.296500, longitude: 73.238000, estimated_time_offset_mins: 30 },
-    { id: 10, route_id: 2, stop_name: 'Parul Main Gate Terminal', stop_order: 5, latitude: 22.288700, longitude: 73.363400, estimated_time_offset_mins: 40 },
+    // Route 2: Sama / Gorwa
+    { id: 6,  route_id: 2, stop_name: 'Sama Road BRTS Stop',       stop_order: 1, latitude: 22.3250, longitude: 73.2000, estimated_time_offset_mins: 0 },
+    { id: 7,  route_id: 2, stop_name: 'Gorwa Circle',              stop_order: 2, latitude: 22.3200, longitude: 73.2100, estimated_time_offset_mins: 7 },
+    { id: 8,  route_id: 2, stop_name: 'Harni Road Junction',       stop_order: 3, latitude: 22.3100, longitude: 73.2350, estimated_time_offset_mins: 18 },
+    { id: 9,  route_id: 2, stop_name: 'Waghodia Crossroads',       stop_order: 4, latitude: 22.2965, longitude: 73.2380, estimated_time_offset_mins: 27 },
+    { id: 10, route_id: 2, stop_name: 'Parul University Main Gate',stop_order: 5, latitude: 22.2887, longitude: 73.3634, estimated_time_offset_mins: 40 },
 
-    { id: 11, route_id: 3, stop_name: 'Hostel Block A', stop_order: 1, latitude: 22.286200, longitude: 73.364000, estimated_time_offset_mins: 0 },
-    { id: 12, route_id: 3, stop_name: 'Sports Complex', stop_order: 2, latitude: 22.287000, longitude: 73.365000, estimated_time_offset_mins: 5 },
-    { id: 13, route_id: 3, stop_name: 'Central Library', stop_order: 3, latitude: 22.287800, longitude: 73.361200, estimated_time_offset_mins: 10 },
-    { id: 14, route_id: 3, stop_name: 'Parul Sevashram Hospital', stop_order: 4, latitude: 22.290800, longitude: 73.362000, estimated_time_offset_mins: 15 }
+    // Route 3: Karelibaug / Fatehgunj
+    { id: 11, route_id: 3, stop_name: 'Karelibaug Circle',         stop_order: 1, latitude: 22.3200, longitude: 73.1900, estimated_time_offset_mins: 0 },
+    { id: 12, route_id: 3, stop_name: 'Fatehgunj Bus Stop',        stop_order: 2, latitude: 22.3210, longitude: 73.1950, estimated_time_offset_mins: 6 },
+    { id: 13, route_id: 3, stop_name: 'Subhanpura Crossroads',     stop_order: 3, latitude: 22.3020, longitude: 73.2200, estimated_time_offset_mins: 20 },
+    { id: 14, route_id: 3, stop_name: 'Waghodia Crossroads',       stop_order: 4, latitude: 22.2965, longitude: 73.2380, estimated_time_offset_mins: 33 },
+    { id: 15, route_id: 3, stop_name: 'Parul University Main Gate',stop_order: 5, latitude: 22.2887, longitude: 73.3634, estimated_time_offset_mins: 50 },
+
+    // Route 4: Waghodia / Padra
+    { id: 16, route_id: 4, stop_name: 'Waghodia Bus Stand',        stop_order: 1, latitude: 22.3300, longitude: 73.3000, estimated_time_offset_mins: 0 },
+    { id: 17, route_id: 4, stop_name: 'Padra Road Junction',       stop_order: 2, latitude: 22.3150, longitude: 73.3100, estimated_time_offset_mins: 8 },
+    { id: 18, route_id: 4, stop_name: 'Karjan Crossroads',         stop_order: 3, latitude: 22.3000, longitude: 73.3300, estimated_time_offset_mins: 18 },
+    { id: 19, route_id: 4, stop_name: 'Parul University Main Gate',stop_order: 4, latitude: 22.2887, longitude: 73.3634, estimated_time_offset_mins: 35 }
   ],
   buses: [
-    { id: 1, bus_number: 'BUS-101', license_plate: 'GJ-06-PU-1001', capacity: 52, model: 'Tata Starbus Ultra Campus EV', status: 'active', assigned_driver_id: 4, current_route_id: 1 },
-    { id: 2, bus_number: 'BUS-102', license_plate: 'GJ-06-PU-1002', capacity: 45, model: 'Eicher Skyline Pro Campus', status: 'active', assigned_driver_id: 5, current_route_id: 2 },
-    { id: 3, bus_number: 'BUS-103', license_plate: 'GJ-06-PU-1003', capacity: 36, model: 'Ashok Leyland Falcon', status: 'in_maintenance', assigned_driver_id: null, current_route_id: 3 }
+    { id: 1, bus_number: '1', license_plate: 'GJ-06-PU-0001', capacity: 52, model: 'Tata Starbus Ultra', status: 'active', assigned_driver_id: 4, current_route_id: 1 },
+    { id: 2, bus_number: '2', license_plate: 'GJ-06-PU-0002', capacity: 52, model: 'Tata Starbus Ultra', status: 'active', assigned_driver_id: 5, current_route_id: 2 },
+    { id: 3, bus_number: '3', license_plate: 'GJ-06-PU-0003', capacity: 48, model: 'Eicher Skyline Pro', status: 'active', assigned_driver_id: 6, current_route_id: 3 },
+    { id: 4, bus_number: '4', license_plate: 'GJ-06-PU-0004', capacity: 48, model: 'Eicher Skyline Pro', status: 'active', assigned_driver_id: 7, current_route_id: 4 }
   ],
   trips: [
     { id: 1, bus_id: 1, driver_id: 4, route_id: 1, trip_type: 'morning', status: 'scheduled', start_time: new Date(Date.now() + 60 * 60 * 1000), end_time: null },
