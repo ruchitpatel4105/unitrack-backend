@@ -414,6 +414,29 @@ async function autoMigrateTables(poolInstance) {
         console.log('✅ [Database] Campus seed data successfully populated in cloud database.');
       }
     }
+
+    // Incremental migrations to ensure existing tables match the latest schema
+    const userCols = [
+      { name: 'dob', type: 'VARCHAR(20) NULL' },
+      { name: 'pickup_stop', type: 'VARCHAR(100) NULL' },
+      { name: 'assigned_route_id', type: 'INT NULL' },
+      { name: 'pass_number', type: 'VARCHAR(50) NULL' },
+      { name: 'transport_fee_status', type: "ENUM('paid', 'pending', 'waived') DEFAULT 'paid'" }
+    ];
+    for (const col of userCols) {
+      try {
+        await poolInstance.query(`ALTER TABLE users ADD COLUMN ${col.name} ${col.type}`);
+      } catch (ignored) {
+        // Column already exists
+      }
+    }
+
+    // Ensure model column is dropped from buses table
+    try {
+      await poolInstance.query('ALTER TABLE buses DROP COLUMN model');
+    } catch (ignored) {
+      // Column already absent
+    }
   } catch (err) {
     console.warn('⚠️ [Database] Auto-migration check:', err.message);
   }

@@ -4,27 +4,7 @@
 CREATE DATABASE IF NOT EXISTS unitrack_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE unitrack_db;
 
--- 1. Users Table (Admin, Student, Driver)
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    role ENUM('admin', 'student', 'driver') NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(120) UNIQUE NOT NULL,
-    phone VARCHAR(20) UNIQUE NOT NULL,
-    student_id VARCHAR(50) UNIQUE NULL,
-    driver_id VARCHAR(50) UNIQUE NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    avatar_url VARCHAR(255) NULL,
-    fcm_token VARCHAR(255) NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user_role (role),
-    INDEX idx_user_student_id (student_id),
-    INDEX idx_user_driver_id (driver_id),
-    INDEX idx_user_phone (phone)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 2. Bus Routes Table
+-- 1. Bus Routes Table
 CREATE TABLE IF NOT EXISTS routes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     route_name VARCHAR(100) NOT NULL,
@@ -39,7 +19,7 @@ CREATE TABLE IF NOT EXISTS routes (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. Route Stops Table (Ordered waypoints)
+-- 2. Route Stops Table (Ordered waypoints)
 CREATE TABLE IF NOT EXISTS route_stops (
     id INT AUTO_INCREMENT PRIMARY KEY,
     route_id INT NOT NULL,
@@ -50,6 +30,34 @@ CREATE TABLE IF NOT EXISTS route_stops (
     estimated_time_offset_mins INT DEFAULT 0,
     FOREIGN KEY (route_id) REFERENCES routes(id) ON DELETE CASCADE,
     INDEX idx_route_order (route_id, stop_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 3. Users Table (Admin, Student, Driver)
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    role ENUM('admin', 'student', 'driver') NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    phone VARCHAR(20) UNIQUE NOT NULL,
+    student_id VARCHAR(50) UNIQUE NULL,
+    driver_id VARCHAR(50) UNIQUE NULL,
+    dob VARCHAR(20) NULL,
+    pickup_stop VARCHAR(100) NULL,
+    assigned_route_id INT NULL,
+    pass_number VARCHAR(50) UNIQUE NULL,
+    transport_fee_status ENUM('paid', 'pending', 'waived') DEFAULT 'paid',
+    password_hash VARCHAR(255) NOT NULL,
+    avatar_url VARCHAR(255) NULL,
+    fcm_token VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (assigned_route_id) REFERENCES routes(id) ON DELETE SET NULL,
+    INDEX idx_user_role (role),
+    INDEX idx_user_student_id (student_id),
+    INDEX idx_user_driver_id (driver_id),
+    INDEX idx_user_phone (phone),
+    INDEX idx_user_pass_number (pass_number),
+    INDEX idx_user_assigned_route (assigned_route_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 4. Buses Table

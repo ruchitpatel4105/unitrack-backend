@@ -14,9 +14,6 @@ public interface ApiService {
     @POST("auth/login")
     Call<AuthResponse> login(@Body Map<String, String> body);
 
-    @POST("auth/register")
-    Call<AuthResponse> register(@Body Map<String, String> body);
-
     @GET("auth/me")
     Call<ApiResponse<User>> getMe();
 

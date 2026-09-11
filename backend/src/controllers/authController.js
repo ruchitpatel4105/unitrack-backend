@@ -102,28 +102,6 @@ async function login(req, res) {
   }
 }
 
-async function register(req, res) {
-  try {
-    const { role = 'student' } = req.body;
-
-    // Student self-registration is completely closed
-    if (role === 'student') {
-      return res.status(403).json({
-        success: false,
-        message: 'Self-registration is disabled. Only authorized students who paid transportation fees at the university office can log in using their 13-digit Enrollment Number and Date of Birth (DDMMYYYY).'
-      });
-    }
-
-    return res.status(403).json({
-      success: false,
-      message: 'Registration is restricted to university administrative deployment.'
-    });
-  } catch (err) {
-    console.error('Register error:', err);
-    return res.status(500).json({ success: false, message: 'Server error', error: err.message });
-  }
-}
-
 async function getMe(req, res) {
   try {
     const userId = req.user.id;
@@ -231,7 +209,6 @@ async function updateFcmToken(req, res) {
 
 module.exports = {
   login,
-  register,
   getMe,
   changePassword,
   updateFcmToken
