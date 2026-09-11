@@ -3,16 +3,10 @@ package com.unitrack.app.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.unitrack.app.R;
 import com.unitrack.app.models.ApiResponse;
 import com.unitrack.app.models.LocationUpdate;
@@ -20,17 +14,20 @@ import com.unitrack.app.models.Trip;
 import com.unitrack.app.network.ApiClient;
 import com.unitrack.app.socket.SocketManager;
 import java.util.List;
+import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LiveBusActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class LiveBusActivity extends AppCompatActivity {
 
-    private GoogleMap googleMap;
-    private Marker busMarker;
+    private WebView mapWebView;
     private TextView tvLiveStatus, tvSpeedBadge, tvRouteName, tvDriverInfo, tvCoordinates;
     private View telemetryOverlay;
     private int busId = 1;
+    private String currentBusNumber = "BUS-101";
+    private boolean isMapLoaded = false;
+    private Trip activeTrip = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +43,28 @@ public class LiveBusActivity extends AppCompatActivity implements OnMapReadyCall
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        } else {
-            telemetryOverlay.setVisibility(View.VISIBLE);
+        mapWebView = findViewById(R.id.mapWebView);
+        if (mapWebView != null) {
+            WebSettings settings = mapWebView.getSettings();
+            settings.setJavaScriptEnabled(true);
+            settings.setDomStorageEnabled(true);
+            settings.setDatabaseEnabled(true);
+            settings.setAllowFileAccess(true);
+            settings.setLoadWithOverviewMode(true);
+            settings.setUseWideViewPort(true);
+
+            mapWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    isMapLoaded = true;
+                    if (activeTrip != null) {
+                        renderBusPosition(activeTrip.getCurrentLatitude(), activeTrip.getCurrentLongitude(), activeTrip.getBusNumber(), activeTrip.getCurrentSpeed(), activeTrip.getCurrentHeading());
+                    }
+                }
+            });
+
+            mapWebView.loadUrl("file:///android_asset/map.html");
         }
 
         fetchActiveTrip();
@@ -62,67 +76,79 @@ public class LiveBusActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onResponse(Call<ApiResponse<List<Trip>>> call, Response<ApiResponse<List<Trip>>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null && !response.body().getData().isEmpty()) {
-                    Trip trip = response.body().getData().get(0);
-                    busId = trip.getBusId();
-                    tvRouteName.setText(trip.getRouteName());
-                    tvDriverInfo.setText("Driver: " + trip.getDriverName() + " • Bus: " + trip.getBusNumber());
-                    double speed = trip.getCurrentSpeed() != null ? trip.getCurrentSpeed() : 38.0;
-                    tvSpeedBadge.setText(String.format("%.0f km/h", speed));
+                    activeTrip = response.body().getData().get(0);
+                    busId = activeTrip.getBusId();
+                    currentBusNumber = activeTrip.getBusNumber();
+                    tvRouteName.setText(activeTrip.getRouteName());
+                    tvDriverInfo.setText("Driver: " + activeTrip.getDriverName() + " • Bus: " + activeTrip.getBusNumber());
+                    double speed = activeTrip.getCurrentSpeed() != null ? activeTrip.getCurrentSpeed() : 0.0;
+                    tvSpeedBadge.setText(String.format(Locale.US, "%.0f km/h", speed));
+                    tvLiveStatus.setText("Live Trip in Progress");
 
-                    double lat = trip.getCurrentLatitude() != null ? trip.getCurrentLatitude() : 12.9782;
-                    double lng = trip.getCurrentLongitude() != null ? trip.getCurrentLongitude() : 77.6012;
-                    updateBusPosition(lat, lng, trip.getBusNumber());
+                    double lat = activeTrip.getCurrentLatitude() != null ? activeTrip.getCurrentLatitude() : 22.2887;
+                    double lng = activeTrip.getCurrentLongitude() != null ? activeTrip.getCurrentLongitude() : 73.3634;
+                    renderBusPosition(lat, lng, activeTrip.getBusNumber(), speed, activeTrip.getCurrentHeading());
 
                     SocketManager.getInstance().trackBus(busId);
+                } else {
+                    displayDepotStandby();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<List<Trip>>> call, Throwable t) {
-                telemetryOverlay.setVisibility(View.VISIBLE);
+                displayDepotStandby();
             }
         });
+    }
+
+    private void displayDepotStandby() {
+        tvLiveStatus.setText("Campus Standby • No Active Trips");
+        tvSpeedBadge.setText("0 km/h");
+        tvRouteName.setText("Campus Transit Depot");
+        tvDriverInfo.setText("Status: Stationed at Parul Campus Depot");
+        tvCoordinates.setText("GPS: 22.2887° N, 73.3634° E (Campus Depot)");
+
+        if (mapWebView != null && isMapLoaded) {
+            mapWebView.evaluateJavascript("window.clearBuses(); window.centerOnCampus();", null);
+        }
     }
 
     private void setupLiveSocket() {
         SocketManager.getInstance().connect();
         SocketManager.getInstance().trackBus(busId);
-        tvLiveStatus.setText("Socket.IO Telemetry Connected");
 
         SocketManager.getInstance().setLocationListener(new SocketManager.LocationListener() {
             @Override
             public void onLocationReceived(LocationUpdate update) {
                 runOnUiThread(() -> {
-                    tvSpeedBadge.setText(String.format("%.0f km/h", update.getSpeed()));
-                    tvCoordinates.setText(String.format("GPS: %.4f° N, %.4f° E", update.getLatitude(), update.getLongitude()));
-                    updateBusPosition(update.getLatitude(), update.getLongitude(), "BUS-" + update.getBusId());
+                    tvLiveStatus.setText("Live GPS Streaming Active");
+                    tvSpeedBadge.setText(String.format(Locale.US, "%.0f km/h", update.getSpeed()));
+                    tvCoordinates.setText(String.format(Locale.US, "GPS: %.4f° N, %.4f° E", update.getLatitude(), update.getLongitude()));
+                    renderBusPosition(update.getLatitude(), update.getLongitude(), currentBusNumber, update.getSpeed(), update.getHeading());
                 });
             }
         });
     }
 
-    private void updateBusPosition(double lat, double lng, String busTitle) {
-        LatLng latLng = new LatLng(lat, lng);
-        if (googleMap != null) {
-            if (busMarker == null) {
-                busMarker = googleMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(busTitle)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-            } else {
-                busMarker.setPosition(latLng);
-            }
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-        } else {
-            telemetryOverlay.setVisibility(View.VISIBLE);
-        }
+    private void renderBusPosition(Double lat, Double lng, String busTitle, Double speed, Double heading) {
+        if (mapWebView == null || !isMapLoaded) return;
+        double actualLat = lat != null ? lat : 22.2887;
+        double actualLng = lng != null ? lng : 73.3634;
+        double actualSpeed = speed != null ? speed : 0.0;
+        double actualHeading = heading != null ? heading : 0.0;
+
+        String js = String.format(Locale.US,
+                "window.updateBusLocation(%d, '%s', %f, %f, %f, %f);",
+                busId, busTitle != null ? busTitle : ("BUS-" + busId), actualLat, actualLng, actualSpeed, actualHeading);
+        mapWebView.evaluateJavascript(js, null);
     }
 
     @Override
-    public void onMapReady(@NonNull GoogleMap map) {
-        this.googleMap = map;
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        LatLng center = new LatLng(12.9782, 77.6012);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 13f));
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mapWebView != null) {
+            mapWebView.destroy();
+        }
     }
 }

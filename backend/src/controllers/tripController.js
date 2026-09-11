@@ -27,7 +27,7 @@ async function getActiveTrips(req, res) {
         const driver = memoryStore.users.find(u => u.id === t.driver_id) || {};
         const route = memoryStore.routes.find(r => r.id === t.route_id) || {};
         const locs = memoryStore.trip_locations.filter(l => l.trip_id === t.id || l.bus_id === t.bus_id);
-        const lastLoc = locs.length > 0 ? locs[locs.length - 1] : { latitude: 12.9782, longitude: 77.6012, speed: 35, heading: 45 };
+        const lastLoc = locs.length > 0 ? locs[locs.length - 1] : { latitude: 22.2887, longitude: 73.3634, speed: 0, heading: 0 };
 
         return {
           ...t,

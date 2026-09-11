@@ -15,50 +15,50 @@ ON DUPLICATE KEY UPDATE name=VALUES(name);
 
 -- 2. Insert Routes
 INSERT INTO routes (id, route_name, route_code, description, start_point, end_point, estimated_duration_mins, distance_km, is_active) VALUES
-(1, 'Campus Express - North Route', 'RT-NORTH-101', 'Direct express transit from North Metro Hub to Engineering Block', 'North Metro Station', 'Engineering Campus Gate 3', 35, 14.50, 1),
-(2, 'South Suburban Shuttle', 'RT-SOUTH-202', 'Connecting South City Residential Complex to Main University Library', 'South City Plaza', 'Central Library Complex', 45, 18.20, 1),
-(3, 'East Hostel Campus Circulator', 'RT-CIRC-303', 'Loop service covering Hostels, Sports Complex, and Medical Sciences', 'Hostel Block A', 'Medical Science Quad', 25, 8.75, 1)
+(1, 'Parul Campus Express - North Loop', 'PU-EXP-101', 'Campus loop covering Main Gate, Engineering Quad, and Parul Sevashram Hospital', 'Parul Main Gate & Admin Block', 'Hostel Enclaves & Sports Pavilion', 20, 6.50, 1),
+(2, 'Vadodara Station - Parul Campus Shuttle', 'PU-CTY-202', 'Connecting Vadodara Central Station to Parul University Campus Terminal', 'Vadodara Railway Station', 'Parul Main Gate Terminal', 40, 17.80, 1),
+(3, 'East Campus & Medical Circulator', 'PU-CIRC-303', 'Internal shuttle for Hostels, Library, and Parul Sevashram Medical Quad', 'Hostel Block A', 'Parul Sevashram Hospital', 15, 4.20, 1)
 ON DUPLICATE KEY UPDATE route_name=VALUES(route_name);
 
 -- 3. Insert Route Stops
 INSERT INTO route_stops (id, route_id, stop_name, stop_order, latitude, longitude, estimated_time_offset_mins) VALUES
--- Route 1 Stops
-(1, 1, 'North Metro Station', 1, 12.971598, 77.594566, 0),
-(2, 1, 'Tech Park Junction', 2, 12.976850, 77.599120, 10),
-(3, 1, 'University North Gate', 3, 12.982400, 77.604500, 20),
-(4, 1, 'Science & Tech Annex', 4, 12.986200, 77.608900, 28),
-(5, 1, 'Engineering Campus Gate 3', 5, 12.990500, 77.614200, 35),
+-- Route 1 Stops (Parul Campus)
+(1, 1, 'Parul Main Gate & Admin Block', 1, 22.288700, 73.363400, 0),
+(2, 1, 'Faculty of Engineering & IT', 2, 22.289500, 73.364800, 5),
+(3, 1, 'Parul Sevashram Hospital', 3, 22.290800, 73.362000, 10),
+(4, 1, 'Central Library & SAC', 4, 22.287800, 73.361200, 15),
+(5, 1, 'Hostel Enclaves & Sports Pavilion', 5, 22.286200, 73.364000, 20),
 
--- Route 2 Stops
-(6, 2, 'South City Plaza', 1, 12.915000, 77.585000, 0),
-(7, 2, 'Ring Road Overpass', 2, 12.928000, 77.589000, 12),
-(8, 2, 'Student Housing Enclave', 3, 12.942000, 77.593000, 24),
-(9, 2, 'Main Auditorium Gate', 4, 12.955000, 77.598000, 35),
-(10, 2, 'Central Library Complex', 5, 12.962000, 77.602000, 45),
+-- Route 2 Stops (Vadodara to Parul)
+(6, 2, 'Vadodara Central Station', 1, 22.310800, 73.181200, 0),
+(7, 2, 'Sayajigunj Circle', 2, 22.312000, 73.190500, 8),
+(8, 2, 'Fatehgunj Flyover', 3, 22.321000, 73.195000, 18),
+(9, 2, 'Waghodia Cross Roads', 4, 22.296500, 73.238000, 30),
+(10, 2, 'Parul Main Gate Terminal', 5, 22.288700, 73.363400, 40),
 
--- Route 3 Stops
-(11, 3, 'Hostel Block A', 1, 12.980000, 77.610000, 0),
-(12, 3, 'Olympic Sports Complex', 2, 12.983000, 77.612000, 8),
-(13, 3, 'Student Activity Center', 3, 12.987000, 77.615000, 16),
-(14, 3, 'Medical Science Quad', 4, 12.991000, 77.618000, 25)
+-- Route 3 Stops (Campus Circulator)
+(11, 3, 'Hostel Block A', 1, 22.286200, 73.364000, 0),
+(12, 3, 'Sports Complex', 2, 22.287000, 73.365000, 5),
+(13, 3, 'Central Library', 3, 22.287800, 73.361200, 10),
+(14, 3, 'Parul Sevashram Hospital', 4, 22.290800, 73.362000, 15)
 ON DUPLICATE KEY UPDATE stop_name=VALUES(stop_name);
 
 -- 4. Insert Buses
 INSERT INTO buses (id, bus_number, license_plate, capacity, model, status, assigned_driver_id, current_route_id) VALUES
-(1, 'BUS-101', 'KA-01-EQ-4421', 52, 'Volvo B8R Low Floor', 'active', 4, 1),
-(2, 'BUS-102', 'KA-01-EQ-8812', 45, 'Tata Starbus Ultra', 'active', 5, 2),
-(3, 'BUS-103', 'KA-01-EQ-9904', 36, 'Ashok Leyland Oyster', 'in_maintenance', NULL, 3)
+(1, 'BUS-101', 'GJ-06-PU-1001', 52, 'Tata Starbus Ultra Campus EV', 'active', 4, 1),
+(2, 'BUS-102', 'GJ-06-PU-1002', 45, 'Eicher Skyline Pro Campus', 'active', 5, 2),
+(3, 'BUS-103', 'GJ-06-PU-1003', 36, 'Ashok Leyland Falcon', 'in_maintenance', NULL, 3)
 ON DUPLICATE KEY UPDATE bus_number=VALUES(bus_number);
 
--- 5. Insert Sample Scheduled and In-Progress Trips
+-- 5. Insert Sample Scheduled Trips (Buses at Campus Depot)
 INSERT INTO trips (id, bus_id, driver_id, route_id, trip_type, status, start_time, end_time) VALUES
-(1, 1, 4, 1, 'morning', 'in_progress', CURRENT_TIMESTAMP - INTERVAL 15 MINUTE, NULL),
-(2, 2, 5, 2, 'morning', 'scheduled', CURRENT_TIMESTAMP + INTERVAL 30 MINUTE, NULL)
+(1, 1, 4, 1, 'morning', 'scheduled', CURRENT_TIMESTAMP + INTERVAL 60 MINUTE, NULL),
+(2, 2, 5, 2, 'morning', 'scheduled', CURRENT_TIMESTAMP + INTERVAL 90 MINUTE, NULL)
 ON DUPLICATE KEY UPDATE status=VALUES(status);
 
--- 6. Insert Live Location Breadcrumb
+-- 6. Insert Live Location Breadcrumb (Campus Depot Standby)
 INSERT INTO trip_locations (trip_id, bus_id, latitude, longitude, speed, heading, accuracy) VALUES
-(1, 1, 12.978200, 77.601200, 38.5, 45.0, 3.2);
+(1, 1, 22.288700, 73.363400, 0.0, 0.0, 3.0);
 
 -- 7. Insert Lost & Found Items
 INSERT INTO lost_found_items (id, user_id, type, title, description, category, color, item_date, location_name, bus_id, image_url, status) VALUES
