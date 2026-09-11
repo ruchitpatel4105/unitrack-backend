@@ -46,7 +46,7 @@
                     android:id="@+id/tvFragTripRouteName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Campus Express - North Route"
+                    android:text="Vadodara Station Express"
                     android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Vehicle: BUS-101 • Status: In Transit"
+                    android:text="Vehicle: Bus 1 • Status: In Transit"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 

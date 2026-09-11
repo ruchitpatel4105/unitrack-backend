@@ -30,7 +30,7 @@
                 android:paddingTop="3dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="3dp"
-                android:text="RT-101"
+                android:text="RT-001"
                 android:textColor="@color/primary_dark"
                 android:textSize="10sp"
                 android:textStyle="bold" />
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:text="Campus Express"
+                android:text="Vadodara Station Express"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -60,7 +60,7 @@
             android:layout_marginTop="6dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Direct route between North Metro and Engineering Quad."
+            android:text="Direct connectivity between Vadodara Railway Station and Parul University."
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -74,7 +74,7 @@
                 android:id="@+id/tvItemDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⏱ 35 mins"
+                android:text="⏱ 45 mins"
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold" />
@@ -84,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="📍 14.5 km"
+                android:text="📍 22.5 km"
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold" />

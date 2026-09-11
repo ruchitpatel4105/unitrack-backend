@@ -78,7 +78,7 @@
                         android:id="@+id/tvTripRouteName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Campus Express - North Route"
+                        android:text="Vadodara Station Express"
                         android:textColor="@color/text_primary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Assigned Bus: BUS-101 (KA-01-EQ-4421)"
+                        android:text="Assigned Bus: Bus 1 (GJ-06-PU-0001)"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 

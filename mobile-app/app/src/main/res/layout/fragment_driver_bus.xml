@@ -47,7 +47,7 @@
                     android:id="@+id/tvBusNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="BUS-101"
+                    android:text="Bus 1"
                     android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:fontFamily="monospace"
-                    android:text="KA-01-EQ-4421"
+                    android:text="GJ-06-PU-0001"
                     android:textColor="@color/primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -74,7 +74,7 @@
                     android:id="@+id/tvBusModel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Model: Volvo B8R Low Floor"
+                    android:text="Model: Tata Starbus Ultra"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 

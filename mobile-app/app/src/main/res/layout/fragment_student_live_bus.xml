@@ -116,7 +116,7 @@
                         android:id="@+id/tvSelectedBusNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="BUS-101 • Volvo B8R"
+                        android:text="Bus 1 • Tata Starbus Ultra"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -125,7 +125,7 @@
                         android:id="@+id/tvSelectedBusRoute"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Campus Express - North Route"
+                        android:text="Vadodara Station Express"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>

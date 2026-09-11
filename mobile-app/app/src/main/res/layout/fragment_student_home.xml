@@ -259,7 +259,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="All 3 scheduled arterial loops (North Metro, South Suburban, and East Hostel Circulator) are running on time."
+                    android:text="All 4 Vadodara routes (Station Express, Sama/Gorwa, Karelibaug, Waghodia/Padra) are running on time."
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>

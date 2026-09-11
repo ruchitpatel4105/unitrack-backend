@@ -89,16 +89,17 @@ async function getDriverCurrentTrip(req, res) {
           success: true,
           trip: {
             ...trip,
-            bus_number: bus ? bus.bus_number : 'BUS-101',
-            license_plate: bus ? bus.license_plate : 'KA-01-EQ-4421',
-            capacity: bus ? bus.capacity : 50,
-            route_name: route ? route.route_name : 'North Campus Route',
-            route_code: route ? route.route_code : 'RT-101',
-            start_point: route ? route.start_point : 'Terminal A',
-            end_point: route ? route.end_point : 'Main Quad'
+            bus_number: bus ? bus.bus_number : '1',
+            license_plate: bus ? bus.license_plate : 'GJ-06-PU-0001',
+            capacity: bus ? bus.capacity : 52,
+            route_name: route ? route.route_name : 'Vadodara Station Express',
+            route_code: route ? route.route_code : 'RT-001',
+            start_point: route ? route.start_point : 'Vadodara Railway Station',
+            end_point: route ? route.end_point : 'Parul University Main Gate'
           },
           assigned_bus: assignedBus || null
         });
+
       }
 
       return res.status(200).json({ success: true, trip: null, assigned_bus: assignedBus || null });

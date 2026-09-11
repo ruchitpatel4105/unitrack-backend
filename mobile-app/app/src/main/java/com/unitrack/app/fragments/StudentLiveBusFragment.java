@@ -186,7 +186,7 @@ public class StudentLiveBusFragment extends Fragment {
                         tvLiveTelemetrySpeed.setText(String.format(Locale.US, "Current Velocity: %.1f km/h", update.getSpeed()));
 
                         if (mapWebView != null && isMapLoaded) {
-                            String busLabel = (selectedTrip != null) ? selectedTrip.getBusNumber() : ("BUS-" + update.getBusId());
+                            String busLabel = (selectedTrip != null) ? selectedTrip.getBusNumber() : ("Bus " + update.getBusId());
                             String js = String.format(Locale.US,
                                     "window.updateBusLocation(%d, '%s', %f, %f, %f, %f);",
                                     update.getBusId(), busLabel, update.getLatitude(), update.getLongitude(), update.getSpeed(), update.getHeading());

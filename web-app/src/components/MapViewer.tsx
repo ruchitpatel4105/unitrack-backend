@@ -86,7 +86,7 @@ interface MapViewerProps {
 }
 
 export const MapViewer: React.FC<MapViewerProps> = ({
-  center = [12.9782, 77.6012],
+  center = [22.2887, 73.3634],
   zoom = 13,
   buses = [],
   stops = [],

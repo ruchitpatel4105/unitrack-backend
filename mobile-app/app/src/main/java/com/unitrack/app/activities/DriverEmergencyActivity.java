@@ -31,8 +31,8 @@ public class DriverEmergencyActivity extends AppCompatActivity {
     private MaterialButton btnSendEmergencyAlert;
 
     private LocationHelper locationHelper;
-    private double currentLat = 12.9716;
-    private double currentLng = 77.5946;
+    private double currentLat = 22.2887;
+    private double currentLng = 73.3634;
     private int busId = 1;
 
     @Override

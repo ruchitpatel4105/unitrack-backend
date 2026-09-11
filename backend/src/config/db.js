@@ -250,7 +250,7 @@ const memoryStore = {
       category: 'electronics',
       color: 'Black',
       item_date: new Date(Date.now() - 24 * 3600 * 1000).toISOString().split('T')[0],
-      location_name: 'Bus 101 rear seats',
+      location_name: 'Bus 1 rear seats',
       bus_id: 1,
       image_url: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400',
       status: 'matched',
@@ -265,7 +265,7 @@ const memoryStore = {
       category: 'electronics',
       color: 'Black',
       item_date: new Date(Date.now() - 24 * 3600 * 1000).toISOString().split('T')[0],
-      location_name: 'Bus 101 Terminal',
+      location_name: 'Bus 1 Terminal',
       bus_id: 1,
       image_url: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400',
       status: 'matched',
@@ -280,7 +280,7 @@ const memoryStore = {
       category: 'documents',
       color: 'Brown',
       item_date: new Date().toISOString().split('T')[0],
-      location_name: 'Central Library Complex bus stop',
+      location_name: 'Vadodara Station bus stop',
       bus_id: 2,
       image_url: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400',
       status: 'reported',
@@ -295,7 +295,7 @@ const memoryStore = {
       category: 'electronics',
       color: 'Black',
       item_date: new Date().toISOString().split('T')[0],
-      location_name: 'Bus 102 front seats',
+      location_name: 'Bus 2 front seats',
       bus_id: 2,
       image_url: 'https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?w=400',
       status: 'reported',
@@ -308,7 +308,7 @@ const memoryStore = {
       lost_item_id: 1,
       found_item_id: 2,
       match_score: 94.50,
-      match_reasons: 'Identical brand (Lenovo), exact category match (electronics), color match (black), exact same bus (BUS-101) within same 24-hour timeframe, and matching sticker description.',
+      match_reasons: 'Identical brand (Lenovo), exact category match (electronics), color match (black), exact same bus (Bus 1) within same 24-hour timeframe, and matching sticker description.',
       status: 'suggested',
       created_at: new Date()
     }
@@ -346,7 +346,7 @@ const memoryStore = {
       user_id: 2,
       role: 'student',
       title: 'AI Match Found!',
-      message: 'We found a 94.5% potential match for your reported lost Lenovo ThinkPad on Bus 101.',
+      message: 'We found a 94.5% potential match for your reported lost Lenovo ThinkPad on Bus 1.',
       type: 'match',
       is_read: 0,
       metadata: { lost_item_id: 1, found_item_id: 2 },
@@ -357,13 +357,14 @@ const memoryStore = {
       user_id: 1,
       role: 'admin',
       title: 'Fleet Update',
-      message: 'Bus 101 commenced morning route RT-NORTH-101.',
+      message: 'Bus 1 commenced morning route RT-001 (Vadodara Station Express).',
       type: 'trip',
       is_read: 0,
       metadata: { bus_id: 1, trip_id: 1 },
       created_at: new Date()
     }
   ]
+
 };
 
 async function autoMigrateTables(poolInstance) {

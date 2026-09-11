@@ -45,10 +45,10 @@ public class ReportLostItemActivity extends AppCompatActivity {
 
     private static final String[] BUS_OPTIONS = {
             "Select Bus (Optional)",
-            "BUS-101 • KA-01-EQ-4421 (Campus Express)",
-            "BUS-102 • KA-01-EQ-4422 (South Campus)",
-            "BUS-103 • KA-01-EQ-4423 (Hostel & Science Complex)",
-            "BUS-104 • KA-01-EQ-4424 (Evening Central Shuttle)",
+            "Bus 1 • GJ-06-PU-0001 (Vadodara Station Express)",
+            "Bus 2 • GJ-06-PU-0002 (Sama / Gorwa Route)",
+            "Bus 3 • GJ-06-PU-0003 (Karelibaug / Fatehgunj)",
+            "Bus 4 • GJ-06-PU-0004 (Waghodia / Padra Route)",
             "Other / Campus Transit Stop"
     };
 
@@ -207,10 +207,10 @@ public class ReportLostItemActivity extends AppCompatActivity {
         }
 
         Integer busId = null;
-        if (selectedBus.contains("BUS-101")) busId = 1;
-        else if (selectedBus.contains("BUS-102")) busId = 2;
-        else if (selectedBus.contains("BUS-103")) busId = 3;
-        else if (selectedBus.contains("BUS-104")) busId = 4;
+        if (selectedBus.contains("Bus 1") || selectedBus.contains("BUS-101")) busId = 1;
+        else if (selectedBus.contains("Bus 2") || selectedBus.contains("BUS-102")) busId = 2;
+        else if (selectedBus.contains("Bus 3") || selectedBus.contains("BUS-103")) busId = 3;
+        else if (selectedBus.contains("Bus 4") || selectedBus.contains("BUS-104")) busId = 4;
 
         progressBar.setVisibility(View.VISIBLE);
 

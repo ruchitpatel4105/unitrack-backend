@@ -81,8 +81,8 @@ async function getAlerts(req, res) {
           ...a,
           driver_name: driver ? driver.name : 'Driver',
           driver_phone: driver ? driver.phone : '',
-          bus_number: bus ? bus.bus_number : 'BUS-101',
-          license_plate: bus ? bus.license_plate : ''
+          bus_number: bus ? bus.bus_number : '1',
+          license_plate: bus ? bus.license_plate : 'GJ-06-PU-0001'
         };
       });
       return res.status(200).json({ success: true, data: enriched });

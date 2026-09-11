@@ -95,8 +95,8 @@ All accounts are pre-configured in `database/seed.sql` and the backend in-memory
 | **Admin** | `admin@unitrack.edu` | `admin123` | Full access to Admin Web Dashboard |
 | **Student** | `alex.j@student.unitrack.edu` (or `STD-2024-001`) | `student123` | Senior CS student profile |
 | **Student** | `samantha.r@student.unitrack.edu` (or `STD-2024-002`) | `student123` | Biology student profile |
-| **Driver** | `robert.m@driver.unitrack.edu` (or `DRV-101`) | `driver123` | Assigned to Bus #101 (Route 1) |
-| **Driver** | `maria.g@driver.unitrack.edu` (or `DRV-102`) | `driver123` | Assigned to Bus #102 (Route 2) |
+| **Driver** | `robert.m@driver.unitrack.edu` (or `DRV-101`) | `driver123` | Assigned to Bus #1 (Route 1 - Vadodara Station Express) |
+| **Driver** | `maria.g@driver.unitrack.edu` (or `DRV-102`) | `driver123` | Assigned to Bus #2 (Route 2 - Sama / Gorwa Route) |
 
 ---
 

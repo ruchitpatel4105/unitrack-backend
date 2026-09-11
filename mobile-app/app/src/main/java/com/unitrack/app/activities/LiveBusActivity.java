@@ -25,7 +25,7 @@ public class LiveBusActivity extends AppCompatActivity {
     private TextView tvLiveStatus, tvSpeedBadge, tvRouteName, tvDriverInfo, tvCoordinates;
     private View telemetryOverlay;
     private int busId = 1;
-    private String currentBusNumber = "BUS-101";
+    private String currentBusNumber = "1";
     private boolean isMapLoaded = false;
     private Trip activeTrip = null;
 
@@ -140,7 +140,7 @@ public class LiveBusActivity extends AppCompatActivity {
 
         String js = String.format(Locale.US,
                 "window.updateBusLocation(%d, '%s', %f, %f, %f, %f);",
-                busId, busTitle != null ? busTitle : ("BUS-" + busId), actualLat, actualLng, actualSpeed, actualHeading);
+                busId, busTitle != null ? busTitle : ("Bus " + busId), actualLat, actualLng, actualSpeed, actualHeading);
         mapWebView.evaluateJavascript(js, null);
     }
 

@@ -110,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:lineSpacingExtra="3dp"
-                        android:text="1. Exact category match (electronics)\n2. Matching color (black)\n3. Reported on the exact same bus (BUS-101)\n4. Within same 24-hour timeframe"
+                        android:text="1. Exact category match (electronics)\n2. Matching color (black)\n3. Reported on the exact same bus (Bus 1)\n4. Within same 24-hour timeframe"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 

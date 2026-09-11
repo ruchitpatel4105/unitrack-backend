@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="BUS-101 • KA-01-EQ-4421"
+                    android:text="Bus 1 • GJ-06-PU-0001"
                     android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Route: Campus Express - North Route"
+                    android:text="Route: Vadodara Station Express"
                     android:textColor="@color/primary"
                     android:textSize="13sp"
                     android:textStyle="bold" />

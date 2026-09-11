@@ -73,8 +73,8 @@ export const LiveFleetMapPage: React.FC = () => {
   const busMarkers = filteredTrips.map((t) => ({
     id: t.bus_id,
     bus_number: t.bus_number,
-    latitude: t.current_latitude || 12.9782,
-    longitude: t.current_longitude || 77.6012,
+    latitude: t.current_latitude || 22.2887,
+    longitude: t.current_longitude || 73.3634,
     speed: t.current_speed || 0,
     heading: t.current_heading || 0,
     driver_name: t.driver_name,
@@ -85,9 +85,9 @@ export const LiveFleetMapPage: React.FC = () => {
   const mapCenter: [number, number] = selectedBusId
     ? (() => {
         const b = busMarkers.find((x) => x.id === selectedBusId);
-        return b ? [b.latitude, b.longitude] : [12.9782, 77.6012];
+        return b ? [b.latitude, b.longitude] : [22.2887, 73.3634];
       })()
-    : [12.9782, 77.6012];
+    : [22.2887, 73.3634];
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-6">

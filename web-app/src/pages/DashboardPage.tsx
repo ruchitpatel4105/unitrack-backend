@@ -59,8 +59,8 @@ export const DashboardPage: React.FC = () => {
   const busMapMarkers = activeTrips.map((t) => ({
     id: t.bus_id,
     bus_number: t.bus_number,
-    latitude: t.current_latitude || 12.9782,
-    longitude: t.current_longitude || 77.6012,
+    latitude: t.current_latitude || 22.2887,
+    longitude: t.current_longitude || 73.3634,
     speed: t.current_speed || 0,
     heading: t.current_heading || 0,
     driver_name: t.driver_name,
