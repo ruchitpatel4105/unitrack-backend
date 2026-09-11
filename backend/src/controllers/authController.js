@@ -42,9 +42,14 @@ async function login(req, res) {
       });
     }
 
-    // Password verification (supports bcrypt and demo override 'password123' / 'admin123')
+    // Password verification:
+    // 1. Demo passwords
+    // 2. Student Date of Birth (DDMMYYYY) if set
+    // 3. Bcrypt comparison
     let isPasswordValid = false;
     if (password === 'password123' || password === 'admin123' || password === 'student123' || password === 'driver123') {
+      isPasswordValid = true;
+    } else if (user.dob && password === user.dob) {
       isPasswordValid = true;
     } else if (user.password_hash) {
       try {
@@ -57,7 +62,7 @@ async function login(req, res) {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: 'Invalid credentials. For students, default password is Date of Birth (DDMMYYYY).'
       });
     }
 
@@ -76,7 +81,13 @@ async function login(req, res) {
       role: user.role,
       student_id: user.student_id,
       driver_id: user.driver_id,
-      avatar_url: user.avatar_url
+      avatar_url: user.avatar_url,
+      dob: user.dob || null,
+      pickup_stop: user.pickup_stop || null,
+      assigned_route_id: user.assigned_route_id || null,
+      assigned_route_name: user.assigned_route_name || null,
+      pass_number: user.pass_number || null,
+      transport_fee_status: user.transport_fee_status || 'paid'
     };
 
     return res.status(200).json({
@@ -93,94 +104,111 @@ async function login(req, res) {
 
 async function register(req, res) {
   try {
-    const { name, email, phone, student_id, password, role = 'student' } = req.body;
+    const { role = 'student' } = req.body;
 
-    if (!name || !email || !phone || !password) {
-      return res.status(400).json({ success: false, message: 'Name, email, phone, and password are required' });
-    }
-
+    // Student self-registration is completely closed
     if (role === 'student') {
-      const enrollmentRegex = /^\d{13}$/;
-      const cleanedStudentId = (student_id || '').trim();
-      const cleanedEmail = (email || '').trim().toLowerCase();
-
-      if (!cleanedStudentId || !enrollmentRegex.test(cleanedStudentId)) {
-        return res.status(400).json({
-          success: false,
-          message: 'Enrollment number must be exactly 13 digits (e.g. 2403051057034)'
-        });
-      }
-
-      const expectedEmail = `${cleanedStudentId}@paruluniversity.ac.in`;
-      if (cleanedEmail !== expectedEmail) {
-        return res.status(400).json({
-          success: false,
-          message: `Email must match your enrollment number: ${expectedEmail}`
-        });
-      }
+      return res.status(403).json({
+        success: false,
+        message: 'Self-registration is disabled. Only authorized students who paid transportation fees at the university office can log in using their 13-digit Enrollment Number and Date of Birth (DDMMYYYY).'
+      });
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const password_hash = await bcrypt.hash(password, salt);
-
-    if (isLive()) {
-      const existing = await query('SELECT id FROM users WHERE email = ? OR phone = ? OR student_id = ?', [email, phone, student_id || null]);
-      if (existing && existing.length > 0) {
-        return res.status(409).json({ success: false, message: 'User with this email, phone, or Student ID already exists' });
-      }
-
-      const result = await query(
-        'INSERT INTO users (role, name, email, phone, student_id, password_hash) VALUES (?, ?, ?, ?, ?, ?)',
-        [role, name, email, phone, student_id || null, password_hash]
-      );
-
-      const newUser = { id: result.insertId, role, name, email, phone, student_id };
-      const token = signToken({ id: newUser.id, role, name, email });
-      return res.status(201).json({ success: true, message: 'Registration successful', token, user: newUser });
-    } else {
-      const existing = memoryStore.users.find(u => u.email === email || u.phone === phone || (student_id && u.student_id === student_id));
-      if (existing) {
-        if (existing.id >= 2) {
-          existing.password_hash = password_hash;
-          existing.name = name;
-          existing.email = email;
-          existing.phone = phone;
-          existing.student_id = student_id;
-          const token = signToken({ id: existing.id, role, name, email });
-          return res.status(201).json({ success: true, message: 'Registration successful', token, user: existing });
-        }
-        return res.status(409).json({ success: false, message: 'User with this email, phone, or Student ID already exists' });
-      }
-
-      const newUser = {
-        id: memoryStore.users.length + 1,
-        role,
-        name,
-        email,
-        phone,
-        student_id: student_id || null,
-        driver_id: null,
-        password_hash,
-        avatar_url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
-        created_at: new Date()
-      };
-
-      memoryStore.users.push(newUser);
-      const token = signToken({ id: newUser.id, role, name, email });
-      return res.status(201).json({ success: true, message: 'Registration successful', token, user: newUser });
-    }
+    return res.status(403).json({
+      success: false,
+      message: 'Registration is restricted to university administrative deployment.'
+    });
   } catch (err) {
     console.error('Register error:', err);
-    return res.status(500).json({ success: false, message: 'Server error during registration', error: err.message });
+    return res.status(500).json({ success: false, message: 'Server error', error: err.message });
   }
 }
 
 async function getMe(req, res) {
-  return res.status(200).json({
-    success: true,
-    user: req.user
-  });
+  try {
+    const userId = req.user.id;
+    let fullUser = null;
+
+    if (isLive()) {
+      const rows = await query('SELECT * FROM users WHERE id = ?', [userId]);
+      if (rows && rows.length > 0) fullUser = rows[0];
+    } else {
+      fullUser = memoryStore.users.find(u => u.id === userId);
+    }
+
+    if (!fullUser) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const userPayload = {
+      id: fullUser.id,
+      name: fullUser.name,
+      email: fullUser.email,
+      phone: fullUser.phone,
+      role: fullUser.role,
+      student_id: fullUser.student_id,
+      driver_id: fullUser.driver_id,
+      avatar_url: fullUser.avatar_url,
+      dob: fullUser.dob || null,
+      pickup_stop: fullUser.pickup_stop || null,
+      assigned_route_id: fullUser.assigned_route_id || null,
+      assigned_route_name: fullUser.assigned_route_name || null,
+      pass_number: fullUser.pass_number || null,
+      transport_fee_status: fullUser.transport_fee_status || 'paid'
+    };
+
+    return res.status(200).json({
+      success: true,
+      user: userPayload
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+}
+
+async function changePassword(req, res) {
+  try {
+    const userId = req.user.id;
+    const { current_password, new_password } = req.body;
+
+    if (!new_password || new_password.length < 4) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 4 characters long' });
+    }
+
+    let user = null;
+    if (isLive()) {
+      const rows = await query('SELECT * FROM users WHERE id = ?', [userId]);
+      if (rows && rows.length > 0) user = rows[0];
+    } else {
+      user = memoryStore.users.find(u => u.id === userId);
+    }
+
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    // Verify current password (if provided)
+    if (current_password) {
+      let valid = (current_password === 'password123' || (user.dob && current_password === user.dob));
+      if (!valid && user.password_hash) {
+        try { valid = await bcrypt.compare(current_password, user.password_hash); } catch {}
+      }
+      if (!valid) {
+        return res.status(401).json({ success: false, message: 'Current password is incorrect' });
+      }
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const password_hash = await bcrypt.hash(new_password, salt);
+
+    if (isLive()) {
+      await query('UPDATE users SET password_hash = ? WHERE id = ?', [password_hash, userId]);
+    } else {
+      user.password_hash = password_hash;
+    }
+
+    return res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
 }
 
 async function updateFcmToken(req, res) {
@@ -205,5 +233,7 @@ module.exports = {
   login,
   register,
   getMe,
+  changePassword,
   updateFcmToken
 };
+

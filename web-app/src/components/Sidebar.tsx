@@ -5,6 +5,7 @@ import {
   MapPin,
   Bus,
   Route,
+  GraduationCap,
   UserCheck,
   Search,
   AlertTriangle,
@@ -18,11 +19,13 @@ export const Sidebar: React.FC = () => {
     { label: 'Live Fleet Map', to: '/live-map', icon: MapPin },
     { label: 'Bus Management', to: '/buses', icon: Bus },
     { label: 'Route Network', to: '/routes', icon: Route },
+    { label: 'Student Bus Passes', to: '/students', icon: GraduationCap },
     { label: 'Drivers & Trips', to: '/driver-trips', icon: UserCheck },
     { label: 'Lost & Found AI', to: '/lost-found', icon: Search },
     { label: 'Emergency Alarms', to: '/emergencies', icon: AlertTriangle },
     { label: 'Analytics & Insights', to: '/analytics', icon: BarChart3 },
   ];
+
 
   return (
     <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 h-screen sticky top-0 border-r border-slate-800">

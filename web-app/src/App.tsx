@@ -15,6 +15,7 @@ import { DriverTripsPage } from './pages/DriverTripsPage';
 import { LostFoundAdminPage } from './pages/LostFoundAdminPage';
 import { EmergencyAlertsPage } from './pages/EmergencyAlertsPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
+import { StudentRosterPage } from './pages/StudentRosterPage';
 
 const ProtectedLayout: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -43,6 +44,7 @@ const ProtectedLayout: React.FC = () => {
             <Route path="/live-map" element={<LiveFleetMapPage />} />
             <Route path="/buses" element={<BusManagementPage />} />
             <Route path="/routes" element={<RouteManagementPage />} />
+            <Route path="/students" element={<StudentRosterPage />} />
             <Route path="/driver-trips" element={<DriverTripsPage />} />
             <Route path="/lost-found" element={<LostFoundAdminPage />} />
             <Route path="/emergencies" element={<EmergencyAlertsPage />} />
@@ -54,6 +56,7 @@ const ProtectedLayout: React.FC = () => {
     </div>
   );
 };
+
 
 export const App: React.FC = () => {
   return (

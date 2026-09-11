@@ -20,6 +20,7 @@ const lostFoundRoutes = require('./routes/lostFoundRoutes');
 const emergencyRoutes = require('./routes/emergencyRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
+const studentRoutes = require('./routes/studentRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -69,6 +70,7 @@ app.use('/api/lost-found', lostFoundRoutes);
 app.use('/api/emergency', emergencyRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/students', studentRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
