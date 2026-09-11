@@ -1,6 +1,47 @@
 const { isLive, query, memoryStore } = require('../config/db');
 const { calculateItemMatch, findMatchesForCandidate } = require('../services/aiService');
 
+/**
+ * Send in-app notifications to both the lost reporter and found reporter when AI score >= 70
+ */
+async function createMatchNotifications(lostItem, foundItem, matchScore) {
+  const scoreLabel = Math.round(matchScore);
+  const notifyLostUser = {
+    user_id: lostItem.user_id,
+    role: 'student',
+    title: `🎯 AI Match Found! (${scoreLabel}% match)`,
+    message: `Your lost "${lostItem.title}" may match a found report for "${foundItem.title}". Tap to view and connect.`,
+    type: 'match',
+    is_read: 0,
+    created_at: new Date()
+  };
+  const notifyFoundUser = {
+    user_id: foundItem.user_id,
+    role: 'student',
+    title: `🎯 AI Match Found! (${scoreLabel}% match)`,
+    message: `Your found "${foundItem.title}" may match a lost report for "${lostItem.title}". Tap to view and connect.`,
+    type: 'match',
+    is_read: 0,
+    created_at: new Date()
+  };
+
+  if (isLive()) {
+    await query(
+      'INSERT INTO notifications (user_id, role, title, message, type, is_read) VALUES (?, ?, ?, ?, ?, 0)',
+      [notifyLostUser.user_id, notifyLostUser.role, notifyLostUser.title, notifyLostUser.message, 'match']
+    );
+    await query(
+      'INSERT INTO notifications (user_id, role, title, message, type, is_read) VALUES (?, ?, ?, ?, ?, 0)',
+      [notifyFoundUser.user_id, notifyFoundUser.role, notifyFoundUser.title, notifyFoundUser.message, 'match']
+    );
+  } else {
+    const nextId = (memoryStore.notifications || []).length + 1;
+    if (!memoryStore.notifications) memoryStore.notifications = [];
+    memoryStore.notifications.unshift({ id: nextId, ...notifyLostUser });
+    memoryStore.notifications.unshift({ id: nextId + 1, ...notifyFoundUser });
+  }
+}
+
 async function getItems(req, res) {
   try {
     const { type, category, status, search, mine } = req.query;
@@ -250,12 +291,18 @@ async function createItem(req, res) {
 
       for (const m of matches) {
         await query(
-          'INSERT INTO lost_found_matches (lost_item_id, found_item_id, match_score, match_reasons, status) VALUES (?, ?, ?, ?, "suggested") ON DUPLICATE KEY UPDATE match_score = VALUES(match_score)',
+          'INSERT INTO lost_found_matches (lost_item_id, found_item_id, match_score, match_reasons, status) VALUES (?, ?, ?, ?, "suggested") ON DUPLICATE KEY UPDATE match_score = VALUES(match_score), match_reasons = VALUES(match_reasons)',
           [m.lost_item_id, m.found_item_id, m.match_score, m.match_reasons]
         );
 
         if (m.match_score >= 70) {
           await query('UPDATE lost_found_items SET status = "matched" WHERE id IN (?, ?)', [m.lost_item_id, m.found_item_id]);
+          // Fetch both items to create notifications
+          const lostRows = await query('SELECT * FROM lost_found_items WHERE id = ?', [m.lost_item_id]);
+          const foundRows = await query('SELECT * FROM lost_found_items WHERE id = ?', [m.found_item_id]);
+          if (lostRows.length > 0 && foundRows.length > 0) {
+            await createMatchNotifications(lostRows[0], foundRows[0], m.match_score);
+          }
         }
       }
     } else {
@@ -264,29 +311,59 @@ async function createItem(req, res) {
       memoryStore.lost_found_items.unshift(newItemPayload);
 
       // Run AI matcher in-memory
-      const oppositeItems = memoryStore.lost_found_items.filter(i => i.type !== type && i.status !== 'resolved');
+      const oppositeItems = memoryStore.lost_found_items.filter(i => i.type !== type && i.status !== 'resolved' && i.id !== createdId);
       const matches = findMatchesForCandidate(newItemPayload, oppositeItems);
 
       for (const m of matches) {
-        memoryStore.lost_found_matches.push({
-          id: memoryStore.lost_found_matches.length + 1,
-          lost_item_id: m.lost_item_id,
-          found_item_id: m.found_item_id,
-          match_score: m.match_score,
-          match_reasons: m.match_reasons,
-          status: 'suggested',
-          created_at: new Date()
-        });
+        // Avoid duplicate matches in memory store
+        const existing = memoryStore.lost_found_matches.find(
+          x => x.lost_item_id === m.lost_item_id && x.found_item_id === m.found_item_id
+        );
+        if (existing) {
+          existing.match_score = m.match_score;
+          existing.match_reasons = m.match_reasons;
+        } else {
+          memoryStore.lost_found_matches.push({
+            id: memoryStore.lost_found_matches.length + 1,
+            lost_item_id: m.lost_item_id,
+            found_item_id: m.found_item_id,
+            match_score: m.match_score,
+            match_reasons: m.match_reasons,
+            status: 'suggested',
+            created_at: new Date()
+          });
+        }
 
         if (m.match_score >= 70) {
           const item1 = memoryStore.lost_found_items.find(x => x.id === m.lost_item_id);
           const item2 = memoryStore.lost_found_items.find(x => x.id === m.found_item_id);
           if (item1) item1.status = 'matched';
           if (item2) item2.status = 'matched';
+          // Notify both users
+          if (item1 && item2) {
+            await createMatchNotifications(item1, item2, m.match_score);
+          }
         }
       }
+
+      // Return match count in response
+      const highMatches = matches.filter(m => m.match_score >= 70);
+      const suggestedMatches = matches.filter(m => m.match_score >= 45 && m.match_score < 70);
+
+      return res.status(201).json({
+        success: true,
+        message: highMatches.length > 0
+          ? `🎯 Item reported! AI found ${highMatches.length} strong match(es) — both users notified.`
+          : suggestedMatches.length > 0
+          ? `Item reported! AI found ${suggestedMatches.length} possible match(es) — check item details.`
+          : 'Item reported successfully. AI found no matches yet — we will keep checking.',
+        item: newItemPayload,
+        ai_matches_found: matches.length,
+        high_confidence_matches: highMatches.length
+      });
     }
 
+    // isLive() branch return (MySQL path)
     return res.status(201).json({
       success: true,
       message: 'Item reported successfully and processed by AI matching engine',
@@ -297,6 +374,7 @@ async function createItem(req, res) {
     return res.status(500).json({ success: false, message: err.message });
   }
 }
+
 
 async function createClaim(req, res) {
   try {
