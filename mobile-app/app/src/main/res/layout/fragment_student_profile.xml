@@ -72,7 +72,7 @@
                         android:paddingTop="4dp"
                         android:paddingEnd="10dp"
                         android:paddingBottom="4dp"
-                        android:text="PU-PASS-57034"
+                        android:text="—"
                         android:textColor="@color/primary_dark"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -114,7 +114,7 @@
                             android:id="@+id/tvStudentName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Mavani Ruchit"
+                            android:text="Loading..."
                             android:textColor="@color/text_primary"
                             android:textSize="19sp"
                             android:textStyle="bold" />
@@ -125,7 +125,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:fontFamily="monospace"
-                            android:text="ID: 2403051057034"
+                            android:text="ID: —"
                             android:textColor="@color/text_secondary"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -141,7 +141,7 @@
                             android:paddingTop="3dp"
                             android:paddingEnd="10dp"
                             android:paddingBottom="3dp"
-                            android:text="✓ VERIFIED &amp; PAID"
+                            android:text="—"
                             android:textColor="@color/primary_dark"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -171,7 +171,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Sayajigunj Circle"
+                        android:text="—"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -203,7 +203,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Vadodara Station Express"
+                            android:text="—"
                             android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -318,7 +318,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Email: 2403051057034@paruluniversity.ac.in"
+                    android:text="Email: —"
                     android:textColor="@color/text_primary"
                     android:textSize="13sp" />
 
@@ -333,7 +333,7 @@
                     android:id="@+id/tvStudentPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phone: +91 98765 43210"
+                    android:text="Phone: —"
                     android:textColor="@color/text_primary"
                     android:textSize="13sp" />
 

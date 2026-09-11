@@ -13,6 +13,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.unitrack.app.R;
 import com.unitrack.app.gps.LocationHelper;
 import com.unitrack.app.models.ApiResponse;
+import com.unitrack.app.models.Trip;
 import com.unitrack.app.network.ApiClient;
 import com.unitrack.app.socket.SocketManager;
 import com.unitrack.app.utils.Constants;
@@ -31,9 +32,9 @@ public class DriverEmergencyActivity extends AppCompatActivity {
     private MaterialButton btnSendEmergencyAlert;
 
     private LocationHelper locationHelper;
-    private double currentLat = 22.2887;
-    private double currentLng = 73.3634;
-    private int busId = 1;
+    private double currentLat = 0.0;
+    private double currentLng = 0.0;
+    private int busId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,20 @@ public class DriverEmergencyActivity extends AppCompatActivity {
         etEmergencyNotes = findViewById(R.id.etEmergencyNotes);
         btnSendEmergencyAlert = findViewById(R.id.btnSendEmergencyAlert);
 
-        busId = getIntent().getIntExtra(Constants.EXTRA_BUS_ID, 1);
+        busId = getIntent().getIntExtra(Constants.EXTRA_BUS_ID, -1);
+        if (busId == -1) {
+            ApiClient.getService(this).getDriverCurrentTrip().enqueue(new Callback<ApiResponse<Trip>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<Trip>> call, Response<ApiResponse<Trip>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        busId = response.body().getData().getBusId();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<Trip>> call, Throwable t) {}
+            });
+        }
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -94,6 +108,11 @@ public class DriverEmergencyActivity extends AppCompatActivity {
         String notes = etEmergencyNotes.getText() != null ? etEmergencyNotes.getText().toString().trim() : "";
         if (notes.isEmpty()) {
             notes = "Emergency reported by driver (" + alertType + ")";
+        }
+
+        if (busId <= 0) {
+            Toast.makeText(this, "Cannot dispatch alert: No assigned bus found.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         btnSendEmergencyAlert.setEnabled(false);

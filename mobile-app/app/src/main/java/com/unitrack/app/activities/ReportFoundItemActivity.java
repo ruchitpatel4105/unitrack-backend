@@ -19,11 +19,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import com.unitrack.app.R;
 import com.unitrack.app.models.ApiResponse;
+import com.unitrack.app.models.Bus;
 import com.unitrack.app.network.ApiClient;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import retrofit2.Call;
@@ -37,20 +40,12 @@ public class ReportFoundItemActivity extends AppCompatActivity {
     private ImageView ivPreview;
     private TextView tvSelectPhoto;
     private ProgressBar progressBar;
+    private List<Bus> availableBuses = new ArrayList<>();
 
     private String selectedImageBase64 = null;
     private ActivityResultLauncher<String> imagePickerLauncher;
 
     private static final String[] CATEGORIES = {"electronics", "documents", "accessories", "bags", "clothing", "other"};
-
-    private static final String[] BUS_OPTIONS = {
-            "Select Bus (Optional)",
-            "Bus 1 • GJ-06-PU-0001 (Vadodara Station Express)",
-            "Bus 2 • GJ-06-PU-0002 (Sama / Gorwa Route)",
-            "Bus 3 • GJ-06-PU-0003 (Karelibaug / Fatehgunj)",
-            "Bus 4 • GJ-06-PU-0004 (Waghodia / Padra Route)",
-            "Other / Campus Transit Stop"
-    };
 
     private static final String[] ROW_OPTIONS = {
             "Select Row (Optional)",
@@ -91,8 +86,12 @@ public class ReportFoundItemActivity extends AppCompatActivity {
 
         // Spinners setup
         spCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, CATEGORIES));
-        spBus.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, BUS_OPTIONS));
+        List<String> initialBusOptions = new ArrayList<>();
+        initialBusOptions.add("Select Bus (Optional)");
+        spBus.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, initialBusOptions));
         spSeatRow.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ROW_OPTIONS));
+
+        fetchBusesFromDatabase();
 
         // Time Picker setup
         etTime.setOnClickListener(v -> showTimePicker());
@@ -207,10 +206,10 @@ public class ReportFoundItemActivity extends AppCompatActivity {
         }
 
         Integer busId = null;
-        if (selectedBus.contains("Bus 1") || selectedBus.contains("BUS-101")) busId = 1;
-        else if (selectedBus.contains("Bus 2") || selectedBus.contains("BUS-102")) busId = 2;
-        else if (selectedBus.contains("Bus 3") || selectedBus.contains("BUS-103")) busId = 3;
-        else if (selectedBus.contains("Bus 4") || selectedBus.contains("BUS-104")) busId = 4;
+        int selectedBusIndex = spBus.getSelectedItemPosition();
+        if (selectedBusIndex > 0 && (selectedBusIndex - 1) < availableBuses.size()) {
+            busId = availableBuses.get(selectedBusIndex - 1).getId();
+        }
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -254,6 +253,31 @@ public class ReportFoundItemActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(ReportFoundItemActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void fetchBusesFromDatabase() {
+        ApiClient.getService(this).getAllBuses().enqueue(new Callback<ApiResponse<List<Bus>>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<List<Bus>>> call, Response<ApiResponse<List<Bus>>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    availableBuses = response.body().getData();
+                    List<String> busNames = new ArrayList<>();
+                    busNames.add("Select Bus (Optional)");
+                    for (Bus b : availableBuses) {
+                        String label = "Bus " + b.getBusNumber() + " • " + b.getLicensePlate();
+                        if (b.getRouteName() != null && !b.getRouteName().isEmpty()) {
+                            label += " (" + b.getRouteName() + ")";
+                        }
+                        busNames.add(label);
+                    }
+                    busNames.add("Other / Campus Transit Stop");
+                    spBus.setAdapter(new ArrayAdapter<>(ReportFoundItemActivity.this, android.R.layout.simple_spinner_dropdown_item, busNames));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<Bus>>> call, Throwable t) {}
         });
     }
 }

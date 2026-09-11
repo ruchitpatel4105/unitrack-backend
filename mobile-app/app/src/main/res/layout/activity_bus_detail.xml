@@ -61,7 +61,7 @@
                         android:id="@+id/tvBusNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bus 1"
+                        android:text="Loading bus..."
                         android:textColor="@color/text_primary"
                         android:textSize="22sp"
                         android:textStyle="bold" />
@@ -72,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:fontFamily="monospace"
-                        android:text="Plate: GJ-06-PU-0001"
+                        android:text="Plate: —"
                         android:textColor="@color/primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -89,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Seating Capacity: 52 Passengers"
+                        android:text="Seating Capacity: —"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
@@ -98,7 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Assigned Driver: Robert Miller"
+                        android:text="Assigned Driver: —"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
@@ -107,7 +107,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Route: Vadodara Station Express"
+                        android:text="Route: —"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 

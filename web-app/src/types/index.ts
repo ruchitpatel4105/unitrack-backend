@@ -143,12 +143,20 @@ export interface EmergencyAlert {
   resolved_at?: string;
 }
 
+export interface CategoryStat {
+  label: string;
+  count: number;
+  percentage: number;
+}
+
 export interface DashboardMetrics {
   fleet: {
     total_buses: number;
     active_buses: number;
     in_maintenance: number;
     active_trips: number;
+    fleet_uptime?: number;
+    on_time_departure_rate?: number;
   };
   users: {
     total_students: number;
@@ -158,7 +166,9 @@ export interface DashboardMetrics {
     total_lost: number;
     total_found: number;
     pending_claims: number;
+    approved_claims?: number;
     estimated_recovery_rate: number;
+    category_distribution?: CategoryStat[];
   };
   security: {
     active_emergencies: number;

@@ -40,6 +40,14 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void saveUser(User user) {
+        editor.putString(KEY_USER, gson.toJson(user));
+        if (user != null && user.getRole() != null) {
+            editor.putString(KEY_ROLE, user.getRole());
+        }
+        editor.apply();
+    }
+
     public void saveActiveRole(String role) {
         editor.putString(KEY_ROLE, role);
         editor.apply();

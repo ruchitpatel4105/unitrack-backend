@@ -58,7 +58,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                    displayUser(response.body().getData());
+                    User freshUser = response.body().getData();
+                    SessionManager.getInstance(ProfileActivity.this).saveUser(freshUser);
+                    displayUser(freshUser);
                 }
             }
 
@@ -68,17 +70,17 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void displayUser(User user) {
-        tvProfileName.setText(user.getName() != null ? user.getName() : "University Member");
+        tvProfileName.setText(user.getName() != null && !user.getName().isEmpty() ? user.getName() : "University Member");
         tvProfileRole.setText(user.getRole() != null ? user.getRole().toUpperCase() : "STUDENT");
         
         if ("driver".equalsIgnoreCase(user.getRole())) {
-            tvProfileId.setText("Driver ID: " + (user.getDriverId() != null ? user.getDriverId() : "DRV-101"));
+            tvProfileId.setText("Driver ID: " + (user.getDriverId() != null && !user.getDriverId().isEmpty() ? user.getDriverId() : "—"));
         } else {
-            tvProfileId.setText("Enrollment No: " + (user.getStudentId() != null ? user.getStudentId() : "2403051057034"));
+            tvProfileId.setText("Enrollment No: " + (user.getStudentId() != null && !user.getStudentId().isEmpty() ? user.getStudentId() : "—"));
         }
 
-        tvProfileEmail.setText("Email: " + (user.getEmail() != null ? user.getEmail() : "user@unitrack.edu"));
-        tvProfilePhone.setText("Phone: " + (user.getPhone() != null ? user.getPhone() : "+1 (555) 019-2834"));
+        tvProfileEmail.setText("Email: " + (user.getEmail() != null && !user.getEmail().isEmpty() ? user.getEmail() : "—"));
+        tvProfilePhone.setText("Phone: " + (user.getPhone() != null && !user.getPhone().isEmpty() ? user.getPhone() : "—"));
     }
 
     private void logoutUser() {

@@ -48,12 +48,14 @@ public class RouteDetailActivity extends AppCompatActivity {
         });
 
         route = (Route) getIntent().getSerializableExtra(Constants.EXTRA_ROUTE);
-        int routeId = getIntent().getIntExtra(Constants.EXTRA_ROUTE_ID, 1);
+        int routeId = getIntent().getIntExtra(Constants.EXTRA_ROUTE_ID, -1);
 
         if (route != null) {
             displayRouteDetails(route);
-        } else {
+        } else if (routeId != -1) {
             fetchRouteDetails(routeId);
+        } else {
+            finish();
         }
     }
 

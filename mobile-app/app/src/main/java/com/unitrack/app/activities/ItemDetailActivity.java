@@ -48,12 +48,14 @@ public class ItemDetailActivity extends AppCompatActivity {
         btnViewAiMatch = findViewById(R.id.btnViewAiMatch);
 
         item = (LostFoundItem) getIntent().getSerializableExtra(Constants.EXTRA_ITEM);
-        int itemId = getIntent().getIntExtra(Constants.EXTRA_ITEM_ID, 1);
+        int itemId = getIntent().getIntExtra(Constants.EXTRA_ITEM_ID, -1);
 
         if (item != null) {
             displayItem(item);
-        } else {
+        } else if (itemId != -1) {
             fetchItem(itemId);
+        } else {
+            finish();
         }
 
         btnClaim.setOnClickListener(v -> {

@@ -32,9 +32,14 @@ public class GpsTrackingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
-            busId = intent.getIntExtra(Constants.EXTRA_BUS_ID, 1);
+            busId = intent.getIntExtra(Constants.EXTRA_BUS_ID, -1);
             int tid = intent.getIntExtra("extra_trip_id", -1);
             tripId = (tid != -1) ? tid : null;
+        }
+
+        if (busId <= 0) {
+            stopSelf();
+            return START_NOT_STICKY;
         }
 
         Notification notification = createNotification();

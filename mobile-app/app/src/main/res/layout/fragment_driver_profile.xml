@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Robert Miller"
+            android:text="Loading..."
             android:textColor="@color/text_primary"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -65,7 +65,7 @@
                     android:id="@+id/tvDriverBadgeId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Driver Badge: DRV-101"
+                    android:text="Driver Badge: —"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 
@@ -80,7 +80,7 @@
                     android:id="@+id/tvDriverEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email: robert.m@driver.unitrack.edu"
+                    android:text="Email: —"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 
@@ -95,7 +95,7 @@
                     android:id="@+id/tvDriverPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phone: +19876543213"
+                    android:text="Phone: —"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 

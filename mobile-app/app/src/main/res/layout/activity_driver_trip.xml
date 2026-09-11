@@ -78,7 +78,7 @@
                         android:id="@+id/tvTripRouteName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Vadodara Station Express"
+                        android:text="Loading route..."
                         android:textColor="@color/text_primary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Assigned Bus: Bus 1 (GJ-06-PU-0001)"
+                        android:text="Assigned Bus: —"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
@@ -112,7 +112,7 @@
                                 android:id="@+id/tvLiveSpeed"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="38 km/h"
+                                android:text="0 km/h"
                                 android:textColor="@color/text_primary"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
@@ -136,7 +136,7 @@
                                 android:id="@+id/tvLiveHeading"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="45° NE"
+                                android:text="—"
                                 android:textColor="@color/text_primary"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
@@ -160,7 +160,7 @@
                                 android:id="@+id/tvLiveAccuracy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="±3.2m"
+                                android:text="—"
                                 android:textColor="@color/text_primary"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.UniTrack.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
                     android:paddingTop="2dp"
                     android:paddingEnd="6dp"
                     android:paddingBottom="2dp"
-                    android:text="FOUND"
+                    tools:text="FOUND"
                     android:textColor="@color/primary_dark"
                     android:textSize="9sp"
                     android:textStyle="bold" />
@@ -53,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="Yesterday"
+                    tools:text="Yesterday"
                     android:textColor="@color/text_hint"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -65,7 +66,7 @@
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Lenovo Laptop"
+                tools:text="Lenovo Laptop"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -77,7 +78,7 @@
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Bus 101 Terminal"
+                tools:text="Bus 101 Terminal"
                 android:textColor="@color/text_secondary"
                 android:textSize="11sp" />
 

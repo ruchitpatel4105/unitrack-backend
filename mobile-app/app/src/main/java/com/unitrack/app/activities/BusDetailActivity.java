@@ -32,12 +32,14 @@ public class BusDetailActivity extends AppCompatActivity {
         tvRoute = findViewById(R.id.tvAssignedRoute);
 
         bus = (Bus) getIntent().getSerializableExtra(Constants.EXTRA_BUS);
-        int busId = getIntent().getIntExtra(Constants.EXTRA_BUS_ID, 1);
+        int busId = getIntent().getIntExtra(Constants.EXTRA_BUS_ID, -1);
 
         if (bus != null) {
             displayBus(bus);
-        } else {
+        } else if (busId != -1) {
             fetchBus(busId);
+        } else {
+            finish();
         }
 
         findViewById(R.id.btnViewOnMap).setOnClickListener(v -> {

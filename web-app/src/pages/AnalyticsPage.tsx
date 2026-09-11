@@ -14,6 +14,11 @@ export const AnalyticsPage: React.FC = () => {
       .catch(() => {});
   }, []);
 
+  const onTimeRate = metrics?.fleet.on_time_departure_rate ?? 0;
+  const fleetUptime = metrics?.fleet.fleet_uptime ?? 0;
+  const recoveryRate = metrics?.lost_and_found.estimated_recovery_rate ?? 0;
+  const categoryStats = metrics?.lost_and_found.category_distribution || [];
+
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       {/* Header */}
@@ -30,10 +35,12 @@ export const AnalyticsPage: React.FC = () => {
             <span className="text-xs font-bold text-slate-500 uppercase">On-Time Departure Rate</span>
             <Clock className="w-5 h-5 text-emerald-600" />
           </div>
-          <div className="text-4xl font-black text-slate-900">94.2%</div>
-          <p className="text-xs text-slate-500">Based on morning and evening scheduled route departures across 3 campus routes.</p>
+          <div className="text-4xl font-black text-slate-900">{onTimeRate}%</div>
+          <p className="text-xs text-slate-500">
+            {metrics?.fleet.active_trips || 0} active trips currently dispatched across university routes.
+          </p>
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-            <div className="bg-emerald-500 h-full rounded-full" style={{ width: '94.2%' }}></div>
+            <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${onTimeRate}%` }}></div>
           </div>
         </div>
 
@@ -44,26 +51,28 @@ export const AnalyticsPage: React.FC = () => {
             <TrendingUp className="w-5 h-5 text-amber-500" />
           </div>
           <div className="text-4xl font-black text-slate-900">
-            {metrics?.lost_and_found.estimated_recovery_rate || 78}%
+            {recoveryRate}%
           </div>
           <p className="text-xs text-slate-500">
-            Items successfully returned to verified students via automated similarity matching.
+            {metrics?.lost_and_found.approved_claims || 0} approved claims from {metrics?.lost_and_found.total_lost || 0} reported lost items.
           </p>
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-            <div className="bg-amber-500 h-full rounded-full" style={{ width: `${metrics?.lost_and_found.estimated_recovery_rate || 78}%` }}></div>
+            <div className="bg-amber-500 h-full rounded-full" style={{ width: `${recoveryRate}%` }}></div>
           </div>
         </div>
 
         {/* Fleet Availability */}
         <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase">Fleet Uptime</span>
+            <span className="text-xs font-bold text-slate-500 uppercase">Active Fleet Ratio</span>
             <ShieldCheck className="w-5 h-5 text-blue-600" />
           </div>
-          <div className="text-4xl font-black text-slate-900">99.8%</div>
-          <p className="text-xs text-slate-500">Zero unhandled vehicle halts recorded in the current academic semester.</p>
+          <div className="text-4xl font-black text-slate-900">{fleetUptime}%</div>
+          <p className="text-xs text-slate-500">
+            {metrics?.fleet.active_buses || 0} of {metrics?.fleet.total_buses || 0} registered fleet buses currently active in service.
+          </p>
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-            <div className="bg-blue-600 h-full rounded-full" style={{ width: '99.8%' }}></div>
+            <div className="bg-blue-600 h-full rounded-full" style={{ width: `${fleetUptime}%` }}></div>
           </div>
         </div>
       </div>
@@ -71,19 +80,18 @@ export const AnalyticsPage: React.FC = () => {
       {/* Category Breakdown Table */}
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 space-y-4">
         <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Lost & Found Category Distribution</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-          {[
-            { label: 'Electronics', count: '48%', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-            { label: 'Documents & IDs', count: '24%', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-            { label: 'Bags & Pouches', count: '16%', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-            { label: 'Accessories', count: '12%', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-          ].map((cat) => (
-            <div key={cat.label} className={`p-4 rounded-2xl border ${cat.color} text-center`}>
-              <div className="text-2xl font-black">{cat.count}</div>
-              <div className="text-xs font-semibold mt-1">{cat.label}</div>
-            </div>
-          ))}
-        </div>
+        {categoryStats.length === 0 ? (
+          <div className="text-xs text-slate-400 py-6 text-center">No lost & found records in database yet.</div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+            {categoryStats.map((cat) => (
+              <div key={cat.label} className="p-4 rounded-2xl border bg-slate-50 border-slate-200 text-center">
+                <div className="text-2xl font-black text-slate-900">{cat.percentage}%</div>
+                <div className="text-xs font-semibold mt-1 text-slate-600">{cat.label} ({cat.count})</div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

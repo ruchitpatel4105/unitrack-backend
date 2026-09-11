@@ -47,7 +47,7 @@
                     android:id="@+id/tvBusNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bus 1"
+                    android:text="—"
                     android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:fontFamily="monospace"
-                    android:text="GJ-06-PU-0001"
+                    android:text="—"
                     android:textColor="@color/primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -75,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="Passenger Capacity: 52 Seats"
+                    android:text="Passenger Capacity: —"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 
@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="Fleet Maintenance: Certified Nominal"
+                    android:text="Vehicle Status: Checking..."
                     android:textColor="@color/primary_dark"
                     android:textSize="13sp"
                     android:textStyle="bold" />

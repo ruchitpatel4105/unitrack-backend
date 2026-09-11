@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.UniTrack.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -24,7 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Lenovo Laptop"
+                tools:text="Lenovo Laptop"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -38,7 +39,7 @@
                 android:paddingTop="3dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="3dp"
-                android:text="PENDING"
+                tools:text="PENDING"
                 android:textColor="@color/warning"
                 android:textSize="10sp"
                 android:textStyle="bold" />
@@ -51,7 +52,7 @@
             android:layout_marginTop="6dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Serial number ends in 9841..."
+            tools:text="Serial number ends in 9841..."
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
 
@@ -60,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Admin: Awaiting verification in office"
+            tools:text="Admin: Awaiting verification in office"
             android:textColor="@color/primary"
             android:textSize="11sp"
             android:visibility="gone" />

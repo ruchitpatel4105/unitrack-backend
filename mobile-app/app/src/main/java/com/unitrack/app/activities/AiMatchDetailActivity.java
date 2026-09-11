@@ -35,9 +35,9 @@ public class AiMatchDetailActivity extends AppCompatActivity {
         if (aiMatch != null) {
             displayAiMatch(aiMatch);
         } else {
-            // Default sample display if testing without serializable
-            tvMatchPercentage.setText("92.5%");
-            tvMatchExplanation.setText("• Matching category: Electronics\n• Color proximity: Black\n• Discovered on the same route & transit vehicle\n• Reported within 12 hours of discovery");
+            tvMatchPercentage.setText("—");
+            tvMatchExplanation.setText("No AI match details available.");
+            btnProceedClaim.setEnabled(false);
         }
 
         btnProceedClaim.setOnClickListener(v -> {

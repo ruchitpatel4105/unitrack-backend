@@ -160,7 +160,7 @@
                         android:id="@+id/tvRouteName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Vadodara Station Express"
+                        android:text="Loading route..."
                         android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -169,7 +169,7 @@
                         android:id="@+id/tvDriverInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Driver: Robert Miller • Bus: 1"
+                        android:text="Driver: — • Bus: —"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -178,7 +178,7 @@
                     android:id="@+id/tvEta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8 mins"
+                    android:text="—"
                     android:textColor="@color/primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -214,7 +214,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="University North Gate"
+                        android:text="—"
                         android:textColor="@color/text_primary"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -238,7 +238,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Engineering Campus Gate 3"
+                        android:text="—"
                         android:textColor="@color/text_primary"
                         android:textSize="13sp"
                         android:textStyle="bold" />

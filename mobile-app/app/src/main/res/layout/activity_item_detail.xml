@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -81,7 +82,8 @@
                             android:paddingTop="3dp"
                             android:paddingEnd="8dp"
                             android:paddingBottom="3dp"
-                            android:text="LOST ITEM"
+                            android:text="ITEM"
+                            tools:text="LOST ITEM"
                             android:textColor="@color/primary_dark"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -96,7 +98,8 @@
                             android:paddingTop="3dp"
                             android:paddingEnd="8dp"
                             android:paddingBottom="3dp"
-                            android:text="Electronics"
+                            android:text="—"
+                            tools:text="Electronics"
                             android:textColor="@color/warning"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -107,7 +110,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Lenovo ThinkPad Laptop"
+                        android:text="—"
+                        tools:text="Item Title"
                         android:textColor="@color/text_primary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -117,7 +121,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Item description will appear here..."
+                        android:text="—"
+                        tools:text="Item description will appear here..."
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
@@ -132,7 +137,8 @@
                         android:id="@+id/tvLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Location: Central Library bus stop"
+                        android:text="Location: —"
+                        tools:text="Location: Central Library bus stop"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
 
@@ -141,7 +147,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Date: Today"
+                        android:text="Date: —"
+                        tools:text="Date: Today"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
 
@@ -191,7 +198,8 @@
                             android:paddingTop="3dp"
                             android:paddingEnd="8dp"
                             android:paddingBottom="3dp"
-                            android:text="94.5% MATCH"
+                            android:text="—"
+                            tools:text="94.5% MATCH"
                             android:textColor="#92400E"
                             android:textSize="11sp"
                             android:textStyle="bold" />
@@ -202,7 +210,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Neural matching engine detected identical category, color, bus, and keywords."
+                        android:text="Computing AI match breakdown..."
+                        tools:text="Neural matching engine detected identical category, color, bus, and keywords."
                         android:textColor="#78350F"
                         android:textSize="12sp" />
 

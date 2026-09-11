@@ -33,15 +33,29 @@ public class DriverBusFragment extends Fragment {
         ApiClient.getService(requireContext()).getDriverCurrentTrip().enqueue(new Callback<ApiResponse<Trip>>() {
             @Override
             public void onResponse(Call<ApiResponse<Trip>> call, Response<ApiResponse<Trip>> response) {
+                if (!isAdded()) return;
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     Trip trip = response.body().getData();
-                    tvBusNum.setText(trip.getBusNumber());
-                    tvBusPlate.setText(trip.getLicensePlate());
+                    tvBusNum.setText("Bus " + trip.getBusNumber());
+                    tvBusPlate.setText(trip.getLicensePlate() != null ? trip.getLicensePlate() : "—");
+                    tvBusCapacity.setText("Passenger Capacity: Standard Campus Transit");
+                    tvBusHealth.setText("Vehicle Status: Active");
+                } else {
+                    tvBusNum.setText("No Bus Assigned");
+                    tvBusPlate.setText("—");
+                    tvBusCapacity.setText("Passenger Capacity: —");
+                    tvBusHealth.setText("Vehicle Status: Standby");
                 }
             }
 
             @Override
-            public void onFailure(Call<ApiResponse<Trip>> call, Throwable t) {}
+            public void onFailure(Call<ApiResponse<Trip>> call, Throwable t) {
+                if (!isAdded()) return;
+                tvBusNum.setText("No Bus Assigned");
+                tvBusPlate.setText("—");
+                tvBusCapacity.setText("Passenger Capacity: —");
+                tvBusHealth.setText("Vehicle Status: Standby");
+            }
         });
 
         return view;

@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Robert Miller (DRV-101)"
+                    android:text="Loading driver profile..."
                     android:textColor="@color/text_primary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="Bus 1 • GJ-06-PU-0001"
+                    android:text="Checking vehicle assignment..."
                     android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Route: Vadodara Station Express"
+                    android:text="Route: —"
                     android:textColor="@color/primary"
                     android:textSize="13sp"
                     android:textStyle="bold" />

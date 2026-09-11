@@ -17,6 +17,7 @@ import com.unitrack.app.network.ApiClient;
 import com.unitrack.app.services.GpsTrackingService;
 import com.unitrack.app.utils.Constants;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,19 +84,38 @@ public class DriverTripActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponse<Trip>> call, Response<ApiResponse<Trip>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     currentTrip = response.body().getData();
-                    tvTripRouteName.setText(currentTrip.getRouteName());
-                    tvTripBusInfo.setText("Vehicle: " + currentTrip.getBusNumber() + " (" + currentTrip.getLicensePlate() + ")");
+                    tvTripRouteName.setText(currentTrip.getRouteName() != null ? currentTrip.getRouteName() : "Assigned Route");
+                    tvTripBusInfo.setText("Vehicle: Bus " + currentTrip.getBusNumber() + " (" + currentTrip.getLicensePlate() + ")");
+                } else {
+                    displayNoCurrentTrip();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<Trip>> call, Throwable t) {
-                // Fallback default values
+                displayNoCurrentTrip();
             }
         });
     }
 
+    private void displayNoCurrentTrip() {
+        currentTrip = null;
+        tvTripRouteName.setText("No Active Trip Assigned");
+        tvTripBusInfo.setText("No Bus Assigned");
+        isTripActive = false;
+        btnTripToggle.setText("No Active Schedule");
+        btnTripToggle.setEnabled(false);
+        tvGpsStatusBadge.setText("NO ACTIVE TRIP");
+        tvGpsStatusBadge.setBackgroundResource(R.drawable.bg_badge_amber);
+        tvGpsStatusBadge.setTextColor(getResources().getColor(R.color.warning));
+    }
+
     private void startNewTrip() {
+        if (currentTrip == null) {
+            Toast.makeText(this, "No active trip assigned to start.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         isTripActive = true;
         btnTripToggle.setText("Conclude Trip");
         tvGpsStatusBadge.setText("GPS ACTIVE");
@@ -104,17 +124,15 @@ public class DriverTripActivity extends AppCompatActivity {
 
         startGpsService();
 
-        if (currentTrip != null) {
-            Map<String, Object> body = new HashMap<>();
-            body.put("bus_id", currentTrip.getBusId());
-            body.put("route_id", currentTrip.getRouteId());
-            ApiClient.getService(this).startTrip(body).enqueue(new Callback<ApiResponse<Map<String, Object>>>() {
-                @Override
-                public void onResponse(Call<ApiResponse<Map<String, Object>>> call, Response<ApiResponse<Map<String, Object>>> response) {}
-                @Override
-                public void onFailure(Call<ApiResponse<Map<String, Object>>> call, Throwable t) {}
-            });
-        }
+        Map<String, Object> body = new HashMap<>();
+        body.put("bus_id", currentTrip.getBusId());
+        body.put("route_id", currentTrip.getRouteId());
+        ApiClient.getService(this).startTrip(body).enqueue(new Callback<ApiResponse<Map<String, Object>>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Map<String, Object>>> call, Response<ApiResponse<Map<String, Object>>> response) {}
+            @Override
+            public void onFailure(Call<ApiResponse<Map<String, Object>>> call, Throwable t) {}
+        });
 
         Toast.makeText(this, "Trip started! Telemetry beacon transmitting.", Toast.LENGTH_SHORT).show();
     }
@@ -143,23 +161,32 @@ public class DriverTripActivity extends AppCompatActivity {
     }
 
     private void startGpsService() {
-        Intent serviceIntent = new Intent(this, GpsTrackingService.class);
-        serviceIntent.putExtra(Constants.EXTRA_BUS_ID, currentTrip != null ? currentTrip.getBusId() : 1);
-        if (currentTrip != null) serviceIntent.putExtra("extra_trip_id", currentTrip.getId());
-        ContextCompat.startForegroundService(this, serviceIntent);
+        if (currentTrip != null) {
+            Intent serviceIntent = new Intent(this, GpsTrackingService.class);
+            serviceIntent.putExtra(Constants.EXTRA_BUS_ID, currentTrip.getBusId());
+            serviceIntent.putExtra("extra_trip_id", currentTrip.getId());
+            ContextCompat.startForegroundService(this, serviceIntent);
+        }
 
         locationHelper.startLocationUpdates(2000, new LocationHelper.OnLocationUpdatedListener() {
             @Override
             public void onLocationChanged(Location location) {
                 runOnUiThread(() -> {
-                    double speedKmh = location.hasSpeed() ? (location.getSpeed() * 3.6) : 34.0;
-                    tvLiveSpeed.setText(String.format("%.0f km/h", speedKmh));
+                    double speedKmh = location.hasSpeed() ? (location.getSpeed() * 3.6) : 0.0;
+                    tvLiveSpeed.setText(String.format(Locale.US, "%.0f km/h", speedKmh));
 
-                    float bearing = location.hasBearing() ? location.getBearing() : 45.0f;
-                    tvLiveHeading.setText(String.format("%.0f° %s", bearing, getDirection(bearing)));
+                    if (location.hasBearing()) {
+                        float bearing = location.getBearing();
+                        tvLiveHeading.setText(String.format(Locale.US, "%.0f° %s", bearing, getDirection(bearing)));
+                    } else {
+                        tvLiveHeading.setText("—");
+                    }
 
-                    float accuracy = location.hasAccuracy() ? location.getAccuracy() : 4.0f;
-                    tvLiveAccuracy.setText(String.format("±%.1fm", accuracy));
+                    if (location.hasAccuracy()) {
+                        tvLiveAccuracy.setText(String.format(Locale.US, "±%.1fm", location.getAccuracy()));
+                    } else {
+                        tvLiveAccuracy.setText("—");
+                    }
                 });
             }
         });

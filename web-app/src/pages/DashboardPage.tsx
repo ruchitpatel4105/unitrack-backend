@@ -147,7 +147,7 @@ export const DashboardPage: React.FC = () => {
             <span className="text-xs text-slate-500">pending claims</span>
           </div>
           <div className="mt-3 text-xs text-amber-600 font-semibold">
-            <span>{metrics?.lost_and_found.estimated_recovery_rate || 75}% AI match accuracy</span>
+            <span>{metrics?.lost_and_found.estimated_recovery_rate || 0}% AI match accuracy</span>
           </div>
         </div>
 
@@ -251,13 +251,22 @@ export const DashboardPage: React.FC = () => {
 
           <div className="pt-6 border-t border-slate-100 mt-6">
             <div className="text-xs font-semibold text-slate-500 mb-2">Fleet Readiness</div>
-            <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-              <div className="bg-emerald-500 h-full rounded-full" style={{ width: '85%' }}></div>
-            </div>
-            <div className="flex justify-between text-[11px] text-slate-400 mt-1.5">
-              <span>Operational: 85%</span>
-              <span>Target: 95%</span>
-            </div>
+            {(() => {
+              const totalB = metrics?.fleet.total_buses || 0;
+              const activeB = metrics?.fleet.active_buses || 0;
+              const readiness = totalB > 0 ? Math.round((activeB / totalB) * 100) : 0;
+              return (
+                <>
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${readiness}%` }}></div>
+                  </div>
+                  <div className="flex justify-between text-[11px] text-slate-400 mt-1.5">
+                    <span>Active in Service: {readiness}%</span>
+                    <span>Fleet: {activeB}/{totalB}</span>
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>

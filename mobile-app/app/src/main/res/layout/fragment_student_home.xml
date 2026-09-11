@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Alex Johnson"
+                    android:text="Student Commuter"
                     android:textColor="@color/text_primary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="3 Shuttles Operating Now"
+                    android:text="Checking live fleet..."
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />

@@ -38,7 +38,12 @@ public class ClaimItemActivity extends AppCompatActivity {
         btnSubmitClaim = findViewById(R.id.btnSubmitClaim);
         claimProgressBar = findViewById(R.id.claimProgressBar);
 
-        itemId = getIntent().getIntExtra(Constants.EXTRA_ITEM_ID, 1);
+        itemId = getIntent().getIntExtra(Constants.EXTRA_ITEM_ID, -1);
+        if (itemId <= 0) {
+            Toast.makeText(this, "Item identifier missing.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         btnBack.setOnClickListener(v -> finish());
         btnSubmitClaim.setOnClickListener(v -> submitClaim());

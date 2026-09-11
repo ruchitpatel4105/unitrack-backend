@@ -67,7 +67,7 @@
                         android:paddingTop="3dp"
                         android:paddingEnd="8dp"
                         android:paddingBottom="3dp"
-                        android:text="RT-001"
+                        android:text="—"
                         android:textColor="@color/primary_dark"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -77,7 +77,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Vadodara Station Express"
+                        android:text="Loading route..."
                         android:textColor="@color/text_primary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -87,7 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Direct express transit from Vadodara Railway Station to Parul University"
+                        android:text="—"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
@@ -108,7 +108,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Est. 35 Mins"
+                            android:text="—"
                             android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -118,7 +118,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Distance: 14.5 km"
+                            android:text="—"
                             android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             android:textStyle="bold" />

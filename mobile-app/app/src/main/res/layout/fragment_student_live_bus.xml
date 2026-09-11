@@ -116,7 +116,7 @@
                         android:id="@+id/tvSelectedBusNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bus 1"
+                        android:text="Select Bus"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -125,7 +125,7 @@
                         android:id="@+id/tvSelectedBusRoute"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Vadodara Station Express"
+                        android:text="—"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -139,7 +139,7 @@
                     android:paddingTop="4dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="4dp"
-                    android:text="38 km/h"
+                    android:text="0 km/h"
                     android:textColor="@color/primary_dark"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -150,7 +150,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Arriving at University North Gate in ~8 mins"
+                android:text="—"
                 android:textColor="@color/primary"
                 android:textSize="12sp"
                 android:textStyle="bold" />

@@ -57,32 +57,60 @@ public class DriverTripFragment extends Fragment {
         });
 
         btnEmergency.setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), DriverEmergencyActivity.class));
+            Intent intent = new Intent(requireContext(), DriverEmergencyActivity.class);
+            if (currentTrip != null) {
+                intent.putExtra(Constants.EXTRA_BUS_ID, currentTrip.getBusId());
+            }
+            startActivity(intent);
         });
 
         fetchTrip();
-        startGpsService();
 
         return view;
     }
 
     private void fetchTrip() {
+        if (!isAdded() || getContext() == null) return;
         ApiClient.getService(requireContext()).getDriverCurrentTrip().enqueue(new Callback<ApiResponse<Trip>>() {
             @Override
             public void onResponse(Call<ApiResponse<Trip>> call, Response<ApiResponse<Trip>> response) {
+                if (!isAdded()) return;
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     currentTrip = response.body().getData();
-                    tvRouteName.setText(currentTrip.getRouteName());
-                    tvBus.setText("Vehicle: " + currentTrip.getBusNumber() + " • " + currentTrip.getLicensePlate());
+                    tvRouteName.setText(currentTrip.getRouteName() != null ? currentTrip.getRouteName() : "Route Assigned");
+                    tvBus.setText("Vehicle: Bus " + currentTrip.getBusNumber() + " • " + currentTrip.getLicensePlate());
+                    isTripActive = true;
+                    btnTripToggle.setText("Conclude Trip");
+                    btnTripToggle.setEnabled(true);
+                    startGpsService();
+                } else {
+                    currentTrip = null;
+                    tvRouteName.setText("No Active Trip Assigned");
+                    tvBus.setText("No Bus Assigned");
+                    isTripActive = false;
+                    btnTripToggle.setText("No Active Schedule");
+                    btnTripToggle.setEnabled(false);
                 }
             }
 
             @Override
-            public void onFailure(Call<ApiResponse<Trip>> call, Throwable t) {}
+            public void onFailure(Call<ApiResponse<Trip>> call, Throwable t) {
+                if (!isAdded()) return;
+                currentTrip = null;
+                tvRouteName.setText("No Active Trip Assigned");
+                tvBus.setText("No Bus Assigned");
+                isTripActive = false;
+                btnTripToggle.setText("No Active Schedule");
+                btnTripToggle.setEnabled(false);
+            }
         });
     }
 
     private void startTrip() {
+        if (currentTrip == null) {
+            Toast.makeText(requireContext(), "No active trip assigned.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         isTripActive = true;
         btnTripToggle.setText("Conclude Trip");
         startGpsService();
@@ -97,9 +125,10 @@ public class DriverTripFragment extends Fragment {
     }
 
     private void startGpsService() {
+        if (currentTrip == null || !isAdded()) return;
         Intent serviceIntent = new Intent(requireContext(), GpsTrackingService.class);
-        serviceIntent.putExtra(Constants.EXTRA_BUS_ID, currentTrip != null ? currentTrip.getBusId() : 1);
-        if (currentTrip != null) serviceIntent.putExtra("extra_trip_id", currentTrip.getId());
+        serviceIntent.putExtra(Constants.EXTRA_BUS_ID, currentTrip.getBusId());
+        serviceIntent.putExtra("extra_trip_id", currentTrip.getId());
         ContextCompat.startForegroundService(requireContext(), serviceIntent);
 
         locationHelper.startLocationUpdates(3000, new LocationHelper.OnLocationUpdatedListener() {
@@ -107,9 +136,9 @@ public class DriverTripFragment extends Fragment {
             public void onLocationChanged(Location location) {
                 if (getActivity() == null) return;
                 getActivity().runOnUiThread(() -> {
-                    double speed = location.hasSpeed() ? (location.getSpeed() * 3.6) : 38.0;
-                    tvSpeed.setText(String.format("%.0f km/h", speed));
-                    tvAccuracy.setText(String.format("±%.0fm", location.getAccuracy()));
+                    double speed = location.hasSpeed() ? (location.getSpeed() * 3.6) : 0.0;
+                    tvSpeed.setText(String.format(java.util.Locale.US, "%.0f km/h", speed));
+                    tvAccuracy.setText(location.hasAccuracy() ? String.format(java.util.Locale.US, "±%.0fm", location.getAccuracy()) : "—");
                 });
             }
         });

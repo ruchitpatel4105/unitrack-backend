@@ -64,6 +64,7 @@ public class StudentProfileFragment extends Fragment {
         ivPassQrCode = view.findViewById(R.id.ivPassQrCode);
 
         populatePassData();
+        fetchLatestProfileFromDatabase();
         startLiveSecurityClock();
 
         view.findViewById(R.id.btnChangePassword).setOnClickListener(v -> showChangePasswordDialog());
@@ -78,38 +79,47 @@ public class StudentProfileFragment extends Fragment {
         return view;
     }
 
+    private void fetchLatestProfileFromDatabase() {
+        if (!isAdded() || getContext() == null) return;
+        ApiClient.getService(requireContext()).getMe().enqueue(new Callback<ApiResponse<User>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<User>> call, Response<ApiResponse<User>> response) {
+                if (!isAdded()) return;
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    SessionManager.getInstance(requireContext()).saveUser(response.body().getData());
+                    populatePassData();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<User>> call, Throwable t) {}
+        });
+    }
+
     private void populatePassData() {
+        if (!isAdded() || getContext() == null) return;
         SessionManager session = SessionManager.getInstance(requireContext());
         User user = session.getUser();
         if (user == null) return;
 
         tvStudentName.setText(user.getName() != null ? user.getName() : "Student Commuter");
 
-        String studentId = user.getStudentId() != null && !user.getStudentId().isEmpty() ? user.getStudentId() : "2403051057034";
+        String studentId = user.getStudentId() != null && !user.getStudentId().isEmpty() ? user.getStudentId() : "—";
         tvStudentId.setText("ID: " + studentId);
 
-        String passNum = user.getPassNumber();
-        if (passNum == null || passNum.isEmpty()) {
-            passNum = "PU-PASS-" + (studentId.length() >= 5 ? studentId.substring(studentId.length() - 5) : studentId);
-        }
+        String passNum = user.getPassNumber() != null && !user.getPassNumber().isEmpty() ? user.getPassNumber() : "—";
         tvPassNumber.setText(passNum);
 
-        String pickup = user.getPickupStop();
-        if (pickup == null || pickup.isEmpty()) {
-            pickup = "Sayajigunj Circle"; // Default Parul student route pickup stop
-        }
+        String pickup = user.getPickupStop() != null && !user.getPickupStop().isEmpty() ? user.getPickupStop() : "Not Assigned";
         tvPickupStop.setText(pickup);
 
-        String routeName = user.getAssignedRouteName();
-        if (routeName == null || routeName.isEmpty()) {
-            routeName = "Vadodara Station Express (Route 1)";
-        }
+        String routeName = user.getAssignedRouteName() != null && !user.getAssignedRouteName().isEmpty() ? user.getAssignedRouteName() : "Not Assigned";
         tvAssignedRoute.setText(routeName);
 
-        String email = user.getEmail() != null ? user.getEmail() : studentId + "@paruluniversity.ac.in";
+        String email = user.getEmail() != null && !user.getEmail().isEmpty() ? user.getEmail() : "—";
         tvStudentEmail.setText("Email: " + email);
 
-        String phone = user.getPhone() != null ? user.getPhone() : "+91 98765 43210";
+        String phone = user.getPhone() != null && !user.getPhone().isEmpty() ? user.getPhone() : "—";
         tvStudentPhone.setText("Phone: " + phone);
 
         // Status Badge
@@ -134,7 +144,7 @@ public class StudentProfileFragment extends Fragment {
         }
 
         // Dynamic Verification QR Code
-        String qrPayload = "PU-BUS-PASS|" + studentId + "|" + user.getName() + "|" + pickup + "|" + routeName + "|STATUS:PAID|AY:2024-25";
+        String qrPayload = "PU-BUS-PASS|" + studentId + "|" + (user.getName() != null ? user.getName() : "") + "|" + pickup + "|" + routeName + "|STATUS:" + (status != null ? status : "UNKNOWN") + "|AY:2024-25";
         String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=6&data=" + Uri.encode(qrPayload);
 
         Glide.with(this)
