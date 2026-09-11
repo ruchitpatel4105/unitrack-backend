@@ -15,7 +15,7 @@ import retrofit2.Response;
 
 public class BusDetailActivity extends AppCompatActivity {
 
-    private TextView tvNumber, tvPlate, tvModel, tvCapacity, tvDriver, tvRoute;
+    private TextView tvNumber, tvPlate, tvCapacity, tvDriver, tvRoute;
     private Bus bus;
 
     @Override
@@ -27,7 +27,6 @@ public class BusDetailActivity extends AppCompatActivity {
 
         tvNumber = findViewById(R.id.tvBusNumber);
         tvPlate = findViewById(R.id.tvLicensePlate);
-        tvModel = findViewById(R.id.tvModel);
         tvCapacity = findViewById(R.id.tvCapacity);
         tvDriver = findViewById(R.id.tvDriver);
         tvRoute = findViewById(R.id.tvAssignedRoute);
@@ -52,7 +51,6 @@ public class BusDetailActivity extends AppCompatActivity {
         this.bus = b;
         tvNumber.setText(b.getBusNumber());
         tvPlate.setText("Plate: " + b.getLicensePlate());
-        tvModel.setText("Model: " + b.getModel());
         tvCapacity.setText("Seating Capacity: " + b.getCapacity() + " Passengers");
         tvDriver.setText("Assigned Driver: " + (b.getDriverName() != null ? b.getDriverName() : "Unassigned"));
         tvRoute.setText("Route: " + (b.getRouteName() != null ? b.getRouteName() : "Unassigned"));

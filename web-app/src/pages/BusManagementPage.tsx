@@ -16,7 +16,6 @@ export const BusManagementPage: React.FC = () => {
     bus_number: '',
     license_plate: '',
     capacity: 50,
-    model: 'Tata Starbus',
     status: 'active' as 'active' | 'in_maintenance' | 'inactive',
     assigned_driver_id: '' as string | number,
     current_route_id: '' as string | number
@@ -48,7 +47,6 @@ export const BusManagementPage: React.FC = () => {
       bus_number: '',
       license_plate: '',
       capacity: 50,
-      model: 'Tata Starbus Ultra',
       status: 'active',
       assigned_driver_id: '',
       current_route_id: ''
@@ -62,7 +60,6 @@ export const BusManagementPage: React.FC = () => {
       bus_number: bus.bus_number,
       license_plate: bus.license_plate,
       capacity: bus.capacity,
-      model: bus.model,
       status: bus.status,
       assigned_driver_id: bus.assigned_driver_id || '',
       current_route_id: bus.current_route_id || ''
@@ -126,7 +123,7 @@ export const BusManagementPage: React.FC = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50/70 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                <th className="py-4 px-6">Bus Number & Model</th>
+                <th className="py-4 px-6">Bus Number</th>
                 <th className="py-4 px-6">License Plate</th>
                 <th className="py-4 px-6">Capacity</th>
                 <th className="py-4 px-6">Status</th>
@@ -145,7 +142,6 @@ export const BusManagementPage: React.FC = () => {
                       </div>
                       <div>
                         <div className="font-bold text-slate-900">{bus.bus_number}</div>
-                        <div className="text-[11px] text-slate-400">{bus.model}</div>
                       </div>
                     </div>
                   </td>
@@ -270,29 +266,17 @@ export const BusManagementPage: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Model</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.model}
-                    onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                    className="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Seating Capacity</label>
-                  <input
-                    type="number"
-                    required
-                    min={10}
-                    max={100}
-                    value={formData.capacity}
-                    onChange={(e) => setFormData({ ...formData, capacity: Number(e.target.value) })}
-                    className="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Seating Capacity</label>
+                <input
+                  type="number"
+                  required
+                  min={10}
+                  max={100}
+                  value={formData.capacity}
+                  onChange={(e) => setFormData({ ...formData, capacity: Number(e.target.value) })}
+                  className="w-full text-xs border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-emerald-500 outline-none"
+                />
               </div>
 
               <div>

@@ -18,7 +18,7 @@ import retrofit2.Response;
 
 public class DriverBusFragment extends Fragment {
 
-    private TextView tvBusNum, tvBusPlate, tvBusModel, tvBusCapacity, tvBusHealth;
+    private TextView tvBusNum, tvBusPlate, tvBusCapacity, tvBusHealth;
 
     @Nullable
     @Override
@@ -27,7 +27,6 @@ public class DriverBusFragment extends Fragment {
 
         tvBusNum = view.findViewById(R.id.tvBusNum);
         tvBusPlate = view.findViewById(R.id.tvBusPlate);
-        tvBusModel = view.findViewById(R.id.tvBusModel);
         tvBusCapacity = view.findViewById(R.id.tvBusCapacity);
         tvBusHealth = view.findViewById(R.id.tvBusHealth);
 
@@ -38,7 +37,6 @@ public class DriverBusFragment extends Fragment {
                     Trip trip = response.body().getData();
                     tvBusNum.setText(trip.getBusNumber());
                     tvBusPlate.setText(trip.getLicensePlate());
-                    if (trip.getBusModel() != null) tvBusModel.setText("Model: " + trip.getBusModel());
                 }
             }
 

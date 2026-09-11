@@ -58,7 +58,6 @@ CREATE TABLE IF NOT EXISTS buses (
     bus_number VARCHAR(30) UNIQUE NOT NULL,
     license_plate VARCHAR(30) UNIQUE NOT NULL,
     capacity INT DEFAULT 50,
-    model VARCHAR(50) DEFAULT 'Tata Starbus',
     status ENUM('active', 'in_maintenance', 'inactive') DEFAULT 'active',
     assigned_driver_id INT NULL,
     current_route_id INT NULL,

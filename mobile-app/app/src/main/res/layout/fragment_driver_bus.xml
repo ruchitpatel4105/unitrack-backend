@@ -71,14 +71,6 @@
                     android:background="@color/divider" />
 
                 <TextView
-                    android:id="@+id/tvBusModel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Model: Tata Starbus Ultra"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
-
-                <TextView
                     android:id="@+id/tvBusCapacity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

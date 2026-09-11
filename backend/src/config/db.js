@@ -228,10 +228,10 @@ const memoryStore = {
     { id: 19, route_id: 4, stop_name: 'Parul University Main Gate',stop_order: 4, latitude: 22.2887, longitude: 73.3634, estimated_time_offset_mins: 35 }
   ],
   buses: [
-    { id: 1, bus_number: '1', license_plate: 'GJ-06-PU-0001', capacity: 52, model: 'Tata Starbus Ultra', status: 'active', assigned_driver_id: 4, current_route_id: 1 },
-    { id: 2, bus_number: '2', license_plate: 'GJ-06-PU-0002', capacity: 52, model: 'Tata Starbus Ultra', status: 'active', assigned_driver_id: 5, current_route_id: 2 },
-    { id: 3, bus_number: '3', license_plate: 'GJ-06-PU-0003', capacity: 48, model: 'Eicher Skyline Pro', status: 'active', assigned_driver_id: 6, current_route_id: 3 },
-    { id: 4, bus_number: '4', license_plate: 'GJ-06-PU-0004', capacity: 48, model: 'Eicher Skyline Pro', status: 'active', assigned_driver_id: 7, current_route_id: 4 }
+    { id: 1, bus_number: '1', license_plate: 'GJ-06-PU-0001', capacity: 52, status: 'active', assigned_driver_id: 4, current_route_id: 1 },
+    { id: 2, bus_number: '2', license_plate: 'GJ-06-PU-0002', capacity: 52, status: 'active', assigned_driver_id: 5, current_route_id: 2 },
+    { id: 3, bus_number: '3', license_plate: 'GJ-06-PU-0003', capacity: 48, status: 'active', assigned_driver_id: 6, current_route_id: 3 },
+    { id: 4, bus_number: '4', license_plate: 'GJ-06-PU-0004', capacity: 48, status: 'active', assigned_driver_id: 7, current_route_id: 4 }
   ],
   trips: [
     { id: 1, bus_id: 1, driver_id: 4, route_id: 1, trip_type: 'morning', status: 'scheduled', start_time: new Date(Date.now() + 60 * 60 * 1000), end_time: null },

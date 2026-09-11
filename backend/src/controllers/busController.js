@@ -74,7 +74,7 @@ async function getBusById(req, res) {
 
 async function createBus(req, res) {
   try {
-    const { bus_number, license_plate, capacity = 50, model = 'Tata Starbus', status = 'active', assigned_driver_id, current_route_id } = req.body;
+    const { bus_number, license_plate, capacity = 50, status = 'active', assigned_driver_id, current_route_id } = req.body;
     if (!bus_number || !license_plate) {
       return res.status(400).json({ success: false, message: 'Bus number and license plate are required' });
     }
@@ -86,8 +86,8 @@ async function createBus(req, res) {
         return res.status(409).json({ success: false, message: `Bus number "${bus_number}" is already in use. Please choose a different number.` });
       }
       const result = await query(
-        'INSERT INTO buses (bus_number, license_plate, capacity, model, status, assigned_driver_id, current_route_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [bus_number, license_plate, capacity, model, status, assigned_driver_id || null, current_route_id || null]
+        'INSERT INTO buses (bus_number, license_plate, capacity, status, assigned_driver_id, current_route_id) VALUES (?, ?, ?, ?, ?, ?)',
+        [bus_number, license_plate, capacity, status, assigned_driver_id || null, current_route_id || null]
       );
       return res.status(201).json({ success: true, message: 'Bus created', id: result.insertId });
     } else {
@@ -101,7 +101,6 @@ async function createBus(req, res) {
         bus_number: String(bus_number),
         license_plate,
         capacity: Number(capacity),
-        model,
         status,
         assigned_driver_id: assigned_driver_id ? Number(assigned_driver_id) : null,
         current_route_id: current_route_id ? Number(current_route_id) : null,
@@ -119,7 +118,7 @@ async function createBus(req, res) {
 async function updateBus(req, res) {
   try {
     const { id } = req.params;
-    const { bus_number, license_plate, capacity, model, status, assigned_driver_id, current_route_id } = req.body;
+    const { bus_number, license_plate, capacity, status, assigned_driver_id, current_route_id } = req.body;
 
     if (isLive()) {
       // Check bus_number uniqueness (excluding this bus)
@@ -130,8 +129,8 @@ async function updateBus(req, res) {
         }
       }
       await query(
-        'UPDATE buses SET bus_number = COALESCE(?, bus_number), license_plate = COALESCE(?, license_plate), capacity = COALESCE(?, capacity), model = COALESCE(?, model), status = COALESCE(?, status), assigned_driver_id = ?, current_route_id = ? WHERE id = ?',
-        [bus_number, license_plate, capacity, model, status, assigned_driver_id || null, current_route_id || null, id]
+        'UPDATE buses SET bus_number = COALESCE(?, bus_number), license_plate = COALESCE(?, license_plate), capacity = COALESCE(?, capacity), status = COALESCE(?, status), assigned_driver_id = ?, current_route_id = ? WHERE id = ?',
+        [bus_number, license_plate, capacity, status, assigned_driver_id || null, current_route_id || null, id]
       );
       return res.status(200).json({ success: true, message: 'Bus updated' });
     } else {
@@ -149,7 +148,6 @@ async function updateBus(req, res) {
       if (bus_number) bus.bus_number = String(bus_number);
       if (license_plate) bus.license_plate = license_plate;
       if (capacity) bus.capacity = Number(capacity);
-      if (model) bus.model = model;
       if (status) bus.status = status;
       if (assigned_driver_id !== undefined) bus.assigned_driver_id = assigned_driver_id ? Number(assigned_driver_id) : null;
       if (current_route_id !== undefined) bus.current_route_id = current_route_id ? Number(current_route_id) : null;

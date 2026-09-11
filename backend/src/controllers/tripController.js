@@ -5,7 +5,7 @@ async function getActiveTrips(req, res) {
     if (isLive()) {
       const sql = `
         SELECT t.*, 
-               b.bus_number, b.license_plate, b.model as bus_model,
+               b.bus_number, b.license_plate,
                u.name as driver_name, u.phone as driver_phone,
                r.route_name, r.route_code,
                (SELECT latitude FROM trip_locations WHERE trip_id = t.id ORDER BY id DESC LIMIT 1) as current_latitude,
@@ -33,7 +33,6 @@ async function getActiveTrips(req, res) {
           ...t,
           bus_number: bus.bus_number,
           license_plate: bus.license_plate,
-          bus_model: bus.model,
           driver_name: driver.name,
           driver_phone: driver.phone,
           route_name: route.route_name,

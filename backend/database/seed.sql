@@ -52,11 +52,11 @@ INSERT INTO route_stops (id, route_id, stop_name, stop_order, latitude, longitud
 ON DUPLICATE KEY UPDATE stop_name=VALUES(stop_name);
 
 -- 4. Insert Buses (1, 2, 3, 4 with Gujarat Plates)
-INSERT INTO buses (id, bus_number, license_plate, capacity, model, status, assigned_driver_id, current_route_id) VALUES
-(1, '1', 'GJ-06-PU-0001', 52, 'Tata Starbus Ultra', 'active', 4, 1),
-(2, '2', 'GJ-06-PU-0002', 52, 'Tata Starbus Ultra', 'active', 5, 2),
-(3, '3', 'GJ-06-PU-0003', 48, 'Eicher Skyline Pro', 'active', 6, 3),
-(4, '4', 'GJ-06-PU-0004', 48, 'Eicher Skyline Pro', 'active', 7, 4)
+INSERT INTO buses (id, bus_number, license_plate, capacity, status, assigned_driver_id, current_route_id) VALUES
+(1, '1', 'GJ-06-PU-0001', 52, 'active', 4, 1),
+(2, '2', 'GJ-06-PU-0002', 52, 'active', 5, 2),
+(3, '3', 'GJ-06-PU-0003', 48, 'active', 6, 3),
+(4, '4', 'GJ-06-PU-0004', 48, 'active', 7, 4)
 ON DUPLICATE KEY UPDATE bus_number=VALUES(bus_number), license_plate=VALUES(license_plate);
 
 -- 5. Insert Sample Scheduled Trips

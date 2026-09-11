@@ -16,9 +16,6 @@ public class Bus implements Serializable {
     @SerializedName("capacity")
     private int capacity;
 
-    @SerializedName("model")
-    private String model;
-
     @SerializedName("status")
     private String status;
 
@@ -53,9 +50,6 @@ public class Bus implements Serializable {
 
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
-
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

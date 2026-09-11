@@ -28,9 +28,6 @@ public class Trip implements Serializable {
     @SerializedName("license_plate")
     private String licensePlate;
 
-    @SerializedName("bus_model")
-    private String busModel;
-
     @SerializedName("driver_name")
     private String driverName;
 
@@ -80,9 +77,6 @@ public class Trip implements Serializable {
 
     public String getLicensePlate() { return licensePlate; }
     public void setLicensePlate(String licensePlate) { this.licensePlate = licensePlate; }
-
-    public String getBusModel() { return busModel; }
-    public void setBusModel(String busModel) { this.busModel = busModel; }
 
     public String getDriverName() { return driverName; }
     public void setDriverName(String driverName) { this.driverName = driverName; }

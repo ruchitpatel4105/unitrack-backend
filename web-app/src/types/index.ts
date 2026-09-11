@@ -37,7 +37,6 @@ export interface Bus {
   bus_number: string;
   license_plate: string;
   capacity: number;
-  model: string;
   status: 'active' | 'in_maintenance' | 'inactive';
   assigned_driver_id?: number | null;
   current_route_id?: number | null;
@@ -67,7 +66,6 @@ export interface ActiveTrip {
   status: 'scheduled' | 'in_progress' | 'completed';
   bus_number: string;
   license_plate: string;
-  bus_model: string;
   driver_name: string;
   driver_phone: string;
   route_name: string;
