@@ -76,7 +76,7 @@ public class SessionManager {
 
     public String getServerUrl() {
         String saved = prefs.getString("key_server_url", null);
-        if (saved == null || saved.contains("127.0.0.1") || saved.contains("10.0.2.2") || saved.contains("trycloudflare.com")) {
+        if (saved == null || saved.contains("127.0.0.1") || saved.contains("10.0.2.2") || saved.contains("trycloudflare.com") || !saved.contains("onrender.com")) {
             return Constants.BASE_URL;
         }
         return saved;

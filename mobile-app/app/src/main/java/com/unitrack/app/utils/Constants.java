@@ -1,9 +1,9 @@
 package com.unitrack.app.utils;
 
 public class Constants {
-    // Live Cloudflare HTTPS Tunnel - connects phones anywhere on Wi-Fi, Mobile Data & USB!
-    public static final String BASE_URL = "https://apply-architect-discounted-ruth.trycloudflare.com/api/";
-    public static final String SOCKET_URL = "https://apply-architect-discounted-ruth.trycloudflare.com";
+    // Permanent Render.com 24/7 Cloud Backend
+    public static final String BASE_URL = "https://unitrack-backend-9vu0.onrender.com/api/";
+    public static final String SOCKET_URL = "https://unitrack-backend-9vu0.onrender.com";
 
     // Intent Extras
     public static final String EXTRA_ROUTE_ID = "extra_route_id";
