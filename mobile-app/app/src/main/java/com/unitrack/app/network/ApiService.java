@@ -20,6 +20,9 @@ public interface ApiService {
     @GET("auth/me")
     Call<ApiResponse<User>> getMe();
 
+    @PUT("auth/change-password")
+    Call<ApiResponse<Map<String, Object>>> changePassword(@Body Map<String, String> body);
+
     // Buses
     @GET("buses")
     Call<ApiResponse<List<Bus>>> getAllBuses();

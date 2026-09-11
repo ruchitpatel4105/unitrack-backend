@@ -26,47 +26,10 @@ public class StudentRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_register);
-
-        etName = findViewById(R.id.etName);
-        etStudentId = findViewById(R.id.etStudentId);
-        etEmail = findViewById(R.id.etEmail);
-        etPhone = findViewById(R.id.etPhone);
-        etPassword = findViewById(R.id.etPassword);
-        progressBar = findViewById(R.id.progressBar);
-
-        // Auto-populate Parul University email when 13-digit enrollment number is entered
-        etStudentId.addTextChangedListener(new android.text.TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(android.text.Editable s) {
-                String id = s.toString().trim();
-                if (id.length() == 13 && id.matches("^\\d{13}$")) {
-                    String currentEmail = etEmail.getText().toString().trim();
-                    if (currentEmail.isEmpty() || currentEmail.endsWith("@paruluniversity.ac.in") || !currentEmail.contains("@")) {
-                        etEmail.setText(id + "@paruluniversity.ac.in");
-                    }
-                }
-            }
-        });
-
-        findViewById(R.id.btnRegister).setOnClickListener(v -> performRegister());
-        findViewById(R.id.tvLogin).setOnClickListener(v -> finish());
-
-        // Long press title to configure server IP
-        View title = findViewById(R.id.tvRegisterTitle);
-        if (title != null) {
-            title.setOnLongClickListener(v -> {
-                showServerConfigDialog();
-                return true;
-            });
-        }
+        Toast.makeText(this, "Self-registration is disabled. Please log in using your 13-digit Enrollment ID and Date of Birth.", Toast.LENGTH_LONG).show();
+        finish();
     }
+
 
     private void showServerConfigDialog() {
         android.widget.EditText input = new android.widget.EditText(this);

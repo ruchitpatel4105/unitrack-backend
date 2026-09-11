@@ -36,7 +36,8 @@ public class StudentLoginActivity extends AppCompatActivity {
 
         findViewById(R.id.btnDemoStudent).setOnClickListener(v -> {
             etIdentifier.setText("2403051057034");
-            etPassword.setText("password123");
+            etPassword.setText("15082004");
+            Toast.makeText(this, "Demo student loaded: DOB password (15082004)", Toast.LENGTH_SHORT).show();
         });
 
         // Long press welcome text to configure server IP if needed
@@ -45,14 +46,11 @@ public class StudentLoginActivity extends AppCompatActivity {
             return true;
         });
 
-        findViewById(R.id.tvRegister).setOnClickListener(v -> {
-            startActivity(new Intent(this, StudentRegisterActivity.class));
-        });
-
         findViewById(R.id.tvForgotPassword).setOnClickListener(v -> {
             startActivity(new Intent(this, ForgotPasswordActivity.class));
         });
     }
+
 
     private void showServerConfigDialog() {
         android.widget.EditText input = new android.widget.EditText(this);

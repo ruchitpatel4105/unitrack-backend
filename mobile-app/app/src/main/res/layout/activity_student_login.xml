@@ -158,31 +158,35 @@
             app:cornerRadius="14dp"
             app:strokeColor="@color/primary" />
 
-        <!-- Register Link -->
+        <!-- Transport Office Authorization Notice (No Public Registration) -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
+            android:background="@drawable/bg_badge_emerald"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="12dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New to campus transit? "
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/tvRegister"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Create Account"
-                android:textColor="@color/primary"
-                android:textSize="13sp"
+                android:text="🔒 AUTHORIZED BUS PASS HOLDERS ONLY"
+                android:textColor="@color/primary_dark"
+                android:textSize="11sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="Only students who paid transportation fees are registered.\nDefault password is your Date of Birth (DDMMYYYY)."
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
         </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
+

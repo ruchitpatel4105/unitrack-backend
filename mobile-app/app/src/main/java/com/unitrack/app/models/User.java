@@ -28,6 +28,24 @@ public class User implements Serializable {
     @SerializedName("avatar_url")
     private String avatarUrl;
 
+    @SerializedName("dob")
+    private String dob;
+
+    @SerializedName("pickup_stop")
+    private String pickupStop;
+
+    @SerializedName("assigned_route_id")
+    private Integer assignedRouteId;
+
+    @SerializedName("assigned_route_name")
+    private String assignedRouteName;
+
+    @SerializedName("pass_number")
+    private String passNumber;
+
+    @SerializedName("transport_fee_status")
+    private String transportFeeStatus;
+
     public User() {}
 
     public int getId() { return id; }
@@ -53,4 +71,23 @@ public class User implements Serializable {
 
     public String getAvatarUrl() { return avatarUrl; }
     public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+
+    public String getDob() { return dob; }
+    public void setDob(String dob) { this.dob = dob; }
+
+    public String getPickupStop() { return pickupStop; }
+    public void setPickupStop(String pickupStop) { this.pickupStop = pickupStop; }
+
+    public Integer getAssignedRouteId() { return assignedRouteId; }
+    public void setAssignedRouteId(Integer assignedRouteId) { this.assignedRouteId = assignedRouteId; }
+
+    public String getAssignedRouteName() { return assignedRouteName; }
+    public void setAssignedRouteName(String assignedRouteName) { this.assignedRouteName = assignedRouteName; }
+
+    public String getPassNumber() { return passNumber; }
+    public void setPassNumber(String passNumber) { this.passNumber = passNumber; }
+
+    public String getTransportFeeStatus() { return transportFeeStatus; }
+    public void setTransportFeeStatus(String transportFeeStatus) { this.transportFeeStatus = transportFeeStatus; }
 }
+
