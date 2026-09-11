@@ -1,7 +1,6 @@
 package com.unitrack.app.fragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,7 +39,7 @@ public class StudentProfileFragment extends Fragment {
     private TextView tvPassNumber, tvStudentName, tvStudentId, tvPassStatus;
     private TextView tvPickupStop, tvAssignedRoute, tvLiveClock;
     private TextView tvStudentEmail, tvStudentPhone;
-    private ImageView ivStudentAvatar, ivPassQrCode;
+    private ImageView ivStudentAvatar;
 
     private final Handler clockHandler = new Handler(Looper.getMainLooper());
     private Runnable clockRunnable;
@@ -61,7 +60,6 @@ public class StudentProfileFragment extends Fragment {
         tvStudentEmail = view.findViewById(R.id.tvStudentEmail);
         tvStudentPhone = view.findViewById(R.id.tvStudentPhone);
         ivStudentAvatar = view.findViewById(R.id.ivStudentAvatar);
-        ivPassQrCode = view.findViewById(R.id.ivPassQrCode);
 
         populatePassData();
         fetchLatestProfileFromDatabase();
@@ -142,15 +140,6 @@ public class StudentProfileFragment extends Fragment {
                     .placeholder(R.drawable.bg_badge_emerald)
                     .into(ivStudentAvatar);
         }
-
-        // Dynamic Verification QR Code
-        String qrPayload = "PU-BUS-PASS|" + studentId + "|" + (user.getName() != null ? user.getName() : "") + "|" + pickup + "|" + routeName + "|STATUS:" + (status != null ? status : "UNKNOWN") + "|AY:2024-25";
-        String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=6&data=" + Uri.encode(qrPayload);
-
-        Glide.with(this)
-                .load(qrUrl)
-                .placeholder(android.R.drawable.ic_menu_crop)
-                .into(ivPassQrCode);
     }
 
     private void startLiveSecurityClock() {
