@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
@@ -72,37 +72,54 @@
     var stopMarkers = [];
     var routeLine = null;
 
-    // Campus Stops at Parul University
-    var campusStops = [
-      { order: 1, name: "Parul Main Gate & Admin Block", lat: 22.2887, lng: 73.3634 },
-      { order: 2, name: "Faculty of Engineering & IT", lat: 22.2895, lng: 73.3648 },
-      { order: 3, name: "Parul Sevashram Hospital & Medical Quad", lat: 22.2908, lng: 73.3620 },
-      { order: 4, name: "Central Library & Student Activity Center", lat: 22.2878, lng: 73.3612 },
-      { order: 5, name: "Hostel Enclaves & Sports Pavilion", lat: 22.2862, lng: 73.3640 }
-    ];
-
-    // Add Stop Markers
-    campusStops.forEach(function(s) {
-      var icon = L.divIcon({
+    var campusMarker = L.marker([22.2887, 73.3634], {
+      icon: L.divIcon({
         className: '',
-        html: '<div class="custom-stop-marker">' + s.order + '</div>',
-        iconSize: [24, 24],
-        iconAnchor: [12, 12]
-      });
-      var marker = L.marker([s.lat, s.lng], { icon: icon }).addTo(map);
-      marker.bindPopup('<b>Stop #' + s.order + '</b><br>' + s.name);
-      stopMarkers.push(marker);
-    });
-
-    // Draw campus loop route line
-    var stopCoords = campusStops.map(function(s) { return [s.lat, s.lng]; });
-    stopCoords.push(stopCoords[0]); // loop back
-    routeLine = L.polyline(stopCoords, {
-      color: '#059669',
-      weight: 4,
-      opacity: 0.8,
-      dashArray: '8, 8'
+        html: '<div style="background:#dc2626;color:white;padding:5px 10px;border-radius:12px;font-weight:bold;font-size:11px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,0.3);border:2px solid white;">🎓 Parul University Campus</div>',
+        iconSize: [160, 28],
+        iconAnchor: [80, 14]
+      })
     }).addTo(map);
+    campusMarker.bindPopup('<b>Parul University</b><br>Main Transit Hub & Campus Terminal');
+
+    // Dynamic Route Stops Loader (for City Up-Down routes)
+    window.setRouteStops = function(stops) {
+      // Clear existing stops
+      stopMarkers.forEach(function(m) { map.removeLayer(m); });
+      stopMarkers = [];
+      if (routeLine) {
+        map.removeLayer(routeLine);
+        routeLine = null;
+      }
+
+      if (!stops || stops.length === 0) return;
+
+      var coords = [];
+      stops.forEach(function(s, idx) {
+        var order = s.order || (idx + 1);
+        var icon = L.divIcon({
+          className: '',
+          html: '<div class="custom-stop-marker">' + order + '</div>',
+          iconSize: [24, 24],
+          iconAnchor: [12, 12]
+        });
+        var marker = L.marker([s.lat, s.lng], { icon: icon }).addTo(map);
+        marker.bindPopup('<b>Stop #' + order + ': ' + s.name + '</b>');
+        stopMarkers.push(marker);
+        coords.push([s.lat, s.lng]);
+      });
+
+      // Add Campus Terminal as final destination if not already present
+      coords.push([22.2887, 73.3634]);
+
+      routeLine = L.polyline(coords, {
+        color: '#059669',
+        weight: 4,
+        opacity: 0.85
+      }).addTo(map);
+
+      map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
+    };
 
     // API called from Android Java
     window.updateBusLocation = function(busId, busNumber, lat, lng, speed, heading) {
