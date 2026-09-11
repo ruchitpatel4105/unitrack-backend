@@ -41,10 +41,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 tools:text="Vadodara Station Express"
                 android:textColor="@color/text_primary"
                 android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvItemRouteStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_badge_emerald"
+                android:paddingStart="8dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="3dp"
+                android:text="ACTIVE ROUTE"
+                android:textColor="@color/primary_dark"
+                android:textSize="10sp"
                 android:textStyle="bold" />
 
             <ImageView

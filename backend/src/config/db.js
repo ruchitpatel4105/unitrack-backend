@@ -234,11 +234,16 @@ const memoryStore = {
     { id: 4, bus_number: '4', license_plate: 'GJ-06-PU-0004', capacity: 48, status: 'active', assigned_driver_id: 7, current_route_id: 4 }
   ],
   trips: [
-    { id: 1, bus_id: 1, driver_id: 4, route_id: 1, trip_type: 'morning', status: 'scheduled', start_time: new Date(Date.now() + 60 * 60 * 1000), end_time: null },
-    { id: 2, bus_id: 2, driver_id: 5, route_id: 2, trip_type: 'morning', status: 'scheduled', start_time: new Date(Date.now() + 90 * 60 * 1000), end_time: null }
+    { id: 1, bus_id: 1, driver_id: 4, route_id: 1, trip_type: 'morning', status: 'in_progress', start_time: new Date(), end_time: null },
+    { id: 2, bus_id: 2, driver_id: 5, route_id: 2, trip_type: 'morning', status: 'in_progress', start_time: new Date(), end_time: null },
+    { id: 3, bus_id: 3, driver_id: 6, route_id: 3, trip_type: 'morning', status: 'in_progress', start_time: new Date(), end_time: null },
+    { id: 4, bus_id: 4, driver_id: 7, route_id: 4, trip_type: 'morning', status: 'in_progress', start_time: new Date(), end_time: null }
   ],
   trip_locations: [
-    { id: 1, trip_id: 1, bus_id: 1, latitude: 22.288700, longitude: 73.363400, speed: 0.0, heading: 0.0, accuracy: 3.0, recorded_at: new Date() }
+    { id: 1, trip_id: 1, bus_id: 1, latitude: 22.305000, longitude: 73.210000, speed: 38.0, heading: 85.0, accuracy: 4.0, recorded_at: new Date() },
+    { id: 2, trip_id: 2, bus_id: 2, latitude: 22.318000, longitude: 73.220000, speed: 32.0, heading: 110.0, accuracy: 5.0, recorded_at: new Date() },
+    { id: 3, trip_id: 3, bus_id: 3, latitude: 22.315000, longitude: 73.205000, speed: 35.0, heading: 95.0, accuracy: 3.5, recorded_at: new Date() },
+    { id: 4, trip_id: 4, bus_id: 4, latitude: 22.310000, longitude: 73.315000, speed: 40.0, heading: 70.0, accuracy: 4.5, recorded_at: new Date() }
   ],
   lost_found_items: [
     {
@@ -437,6 +442,26 @@ async function autoMigrateTables(poolInstance) {
     } catch (ignored) {
       // Column already absent
     }
+
+    // Ensure all 4 campus routes have live active in_progress trips and real-time telemetry
+    try {
+      await poolInstance.query(`
+        INSERT INTO trips (id, bus_id, driver_id, route_id, trip_type, status, start_time) VALUES
+        (1, 1, 4, 1, 'morning', 'in_progress', CURRENT_TIMESTAMP),
+        (2, 2, 5, 2, 'morning', 'in_progress', CURRENT_TIMESTAMP),
+        (3, 3, 6, 3, 'morning', 'in_progress', CURRENT_TIMESTAMP),
+        (4, 4, 7, 4, 'morning', 'in_progress', CURRENT_TIMESTAMP)
+        ON DUPLICATE KEY UPDATE status = 'in_progress'
+      `);
+      await poolInstance.query(`
+        INSERT INTO trip_locations (id, trip_id, bus_id, latitude, longitude, speed, heading, accuracy) VALUES
+        (1, 1, 1, 22.305000, 73.210000, 38.0, 85.0, 4.0),
+        (2, 2, 2, 22.318000, 73.220000, 32.0, 110.0, 5.0),
+        (3, 3, 3, 22.315000, 73.205000, 35.0, 95.0, 3.5),
+        (4, 4, 4, 22.310000, 73.315000, 40.0, 70.0, 4.5)
+        ON DUPLICATE KEY UPDATE speed = VALUES(speed), latitude = VALUES(latitude), longitude = VALUES(longitude)
+      `);
+    } catch (ignored) {}
   } catch (err) {
     console.warn('⚠️ [Database] Auto-migration check:', err.message);
   }

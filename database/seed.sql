@@ -59,8 +59,18 @@ INSERT INTO buses (id, bus_number, license_plate, capacity, status, assigned_dri
 (4, '4', 'GJ-06-PU-0004', 48, 'active', 7, 4)
 ON DUPLICATE KEY UPDATE bus_number=VALUES(bus_number), license_plate=VALUES(license_plate);
 
--- 5. Insert Sample Scheduled Trips
+-- 5. Insert Live Active Trips (All 4 Routes in Transit)
 INSERT INTO trips (id, bus_id, driver_id, route_id, trip_type, status, start_time, end_time) VALUES
-(1, 1, 4, 1, 'morning', 'scheduled', CURRENT_TIMESTAMP + INTERVAL 60 MINUTE, NULL),
-(2, 2, 5, 2, 'morning', 'scheduled', CURRENT_TIMESTAMP + INTERVAL 90 MINUTE, NULL)
+(1, 1, 4, 1, 'morning', 'in_progress', CURRENT_TIMESTAMP, NULL),
+(2, 2, 5, 2, 'morning', 'in_progress', CURRENT_TIMESTAMP, NULL),
+(3, 3, 6, 3, 'morning', 'in_progress', CURRENT_TIMESTAMP, NULL),
+(4, 4, 7, 4, 'morning', 'in_progress', CURRENT_TIMESTAMP, NULL)
 ON DUPLICATE KEY UPDATE status=VALUES(status);
+
+-- 6. Insert Live GPS Telemetry Locations
+INSERT INTO trip_locations (id, trip_id, bus_id, latitude, longitude, speed, heading, accuracy) VALUES
+(1, 1, 1, 22.305000, 73.210000, 38.0, 85.0, 4.0),
+(2, 2, 2, 22.318000, 73.220000, 32.0, 110.0, 5.0),
+(3, 3, 3, 22.315000, 73.205000, 35.0, 95.0, 3.5),
+(4, 4, 4, 22.310000, 73.315000, 40.0, 70.0, 4.5)
+ON DUPLICATE KEY UPDATE speed=VALUES(speed);

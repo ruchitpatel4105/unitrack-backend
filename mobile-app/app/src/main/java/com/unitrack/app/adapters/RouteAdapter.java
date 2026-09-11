@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.unitrack.app.R;
 import com.unitrack.app.models.Route;
@@ -45,6 +46,18 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         holder.tvDuration.setText("⏱ " + route.getEstimatedDurationMins() + " mins");
         holder.tvDistance.setText("📍 " + route.getDistanceKm() + " km");
 
+        if (route.getIsActive() == 1) {
+            holder.tvStatus.setVisibility(View.VISIBLE);
+            holder.tvStatus.setText("ACTIVE ROUTE");
+            holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_emerald);
+            holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.primary_dark));
+        } else {
+            holder.tvStatus.setVisibility(View.VISIBLE);
+            holder.tvStatus.setText("INACTIVE");
+            holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_amber);
+            holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.accent));
+        }
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onRouteClick(route);
         });
@@ -56,7 +69,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     }
 
     static class RouteViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCode, tvName, tvDesc, tvDuration, tvDistance;
+        TextView tvCode, tvName, tvDesc, tvDuration, tvDistance, tvStatus;
 
         RouteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +78,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             tvDesc = itemView.findViewById(R.id.tvItemRouteDescription);
             tvDuration = itemView.findViewById(R.id.tvItemDuration);
             tvDistance = itemView.findViewById(R.id.tvItemDistance);
+            tvStatus = itemView.findViewById(R.id.tvItemRouteStatus);
         }
     }
 }

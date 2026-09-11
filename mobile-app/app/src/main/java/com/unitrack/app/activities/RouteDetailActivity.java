@@ -18,7 +18,7 @@ import retrofit2.Response;
 
 public class RouteDetailActivity extends AppCompatActivity {
 
-    private TextView tvCode, tvName, tvDesc, tvDuration, tvDistance;
+    private TextView tvCode, tvName, tvDesc, tvDuration, tvDistance, tvRouteStatus;
     private RecyclerView rvStops;
     private RouteStopAdapter stopAdapter;
     private Route route;
@@ -32,6 +32,7 @@ public class RouteDetailActivity extends AppCompatActivity {
 
         tvCode = findViewById(R.id.tvRouteCode);
         tvName = findViewById(R.id.tvRouteName);
+        tvRouteStatus = findViewById(R.id.tvRouteStatus);
         tvDesc = findViewById(R.id.tvRouteDesc);
         tvDuration = findViewById(R.id.tvDuration);
         tvDistance = findViewById(R.id.tvDistance);
@@ -66,6 +67,18 @@ public class RouteDetailActivity extends AppCompatActivity {
         tvDesc.setText(r.getDescription());
         tvDuration.setText("Est. " + r.getEstimatedDurationMins() + " Mins");
         tvDistance.setText("Distance: " + r.getDistanceKm() + " km");
+
+        if (tvRouteStatus != null) {
+            if (r.getIsActive() == 1) {
+                tvRouteStatus.setText("ACTIVE ROUTE");
+                tvRouteStatus.setBackgroundResource(R.drawable.bg_badge_emerald);
+                tvRouteStatus.setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.primary_dark));
+            } else {
+                tvRouteStatus.setText("INACTIVE");
+                tvRouteStatus.setBackgroundResource(R.drawable.bg_badge_amber);
+                tvRouteStatus.setTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.accent));
+            }
+        }
 
         if (r.getStops() != null) {
             stopAdapter.setStops(r.getStops());

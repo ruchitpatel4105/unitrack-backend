@@ -129,11 +129,18 @@ public class StudentLiveBusFragment extends Fragment {
 
         List<String> labels = new ArrayList<>();
         for (Trip t : activeTrips) {
-            labels.add(t.getBusNumber() + " - " + t.getRouteName());
+            labels.add("Bus " + t.getBusNumber() + " • " + t.getRouteName());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, labels);
         spBusSelect.setAdapter(adapter);
+
+        // Render all running buses across routes on map
+        if (mapWebView != null && isMapLoaded) {
+            for (Trip t : activeTrips) {
+                renderTripOnMap(t);
+            }
+        }
 
         spBusSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -151,7 +158,7 @@ public class StudentLiveBusFragment extends Fragment {
     }
 
     private void updateTripDisplay(Trip trip) {
-        tvBusNumber.setText(trip.getBusNumber() + " (" + trip.getLicensePlate() + ")");
+        tvBusNumber.setText("Bus " + trip.getBusNumber() + " (" + trip.getLicensePlate() + ")");
         tvBusRoute.setText(trip.getRouteName());
         double speed = trip.getCurrentSpeed() != null ? trip.getCurrentSpeed() : 0.0;
         tvSpeedBadge.setText(String.format(Locale.US, "%.0f km/h", speed));
