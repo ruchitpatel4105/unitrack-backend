@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { getSocket } from '../services/socket';
 import { EmergencyAlert } from '../types';
-import { AlertOctagon, Phone, CheckCircle, ShieldAlert, Clock, MapPin } from 'lucide-react';
+import { AlertOctagon, Phone, CheckCircle, Clock, MapPin } from 'lucide-react';
 
 export const EmergencyAlertsPage: React.FC = () => {
   const [alerts, setAlerts] = useState<EmergencyAlert[]>([]);

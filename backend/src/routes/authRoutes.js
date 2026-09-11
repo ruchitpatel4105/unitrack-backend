@@ -5,6 +5,7 @@ const { authenticate } = require('../middleware/authMiddleware');
 
 router.post('/login', authController.login);
 router.get('/me', authenticate, authController.getMe);
+router.put('/change-password', authenticate, authController.changePassword);
 router.post('/fcm-token', authenticate, authController.updateFcmToken);
 
 module.exports = router;

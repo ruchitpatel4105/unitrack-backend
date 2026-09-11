@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { DashboardMetrics } from '../types';
-import { BarChart3, TrendingUp, ShieldCheck, Clock, CheckCircle2 } from 'lucide-react';
+import { TrendingUp, ShieldCheck, Clock } from 'lucide-react';
 
 export const AnalyticsPage: React.FC = () => {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);

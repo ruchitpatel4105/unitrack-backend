@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { Plus, Search, Key, Trash2, Edit2, CheckCircle2, ShieldCheck, Copy, Check, MapPin, Bus as BusIcon, RefreshCw, X } from 'lucide-react';
+import { Plus, Search, Key, Trash2, Edit2, CheckCircle2, ShieldCheck, Copy, Check, MapPin, RefreshCw, X } from 'lucide-react';
 
 interface StudentPass {
   id: number;
@@ -189,7 +189,7 @@ export const StudentRosterPage: React.FC = () => {
           >
             <option value="">All Bus Routes</option>
             {routes.map(r => (
-              <option key={r.id} value={r.id}>{r.route_code} — {r.route_name}</option>
+              <option key={r.id} value={r.id}>{r.route_code} - {r.route_name}</option>
             ))}
           </select>
 
@@ -406,7 +406,7 @@ export const StudentRosterPage: React.FC = () => {
                 >
                   <option value="">-- Select Transit Route --</option>
                   {routes.map(r => (
-                    <option key={r.id} value={r.id}>{r.route_code} — {r.route_name}</option>
+                    <option key={r.id} value={r.id}>{r.route_code} - {r.route_name}</option>
                   ))}
                 </select>
               </div>

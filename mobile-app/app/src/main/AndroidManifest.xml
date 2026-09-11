@@ -72,9 +72,6 @@
             android:name=".activities.RouteDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.BusDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.LostFoundListActivity"
             android:exported="false" />
         <activity
@@ -117,9 +114,6 @@
         <!-- Common Activities -->
         <activity
             android:name=".activities.NotificationsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ProfileActivity"
             android:exported="false" />
 
         <!-- Foreground Service for Driver GPS Telemetry -->

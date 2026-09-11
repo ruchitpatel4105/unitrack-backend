@@ -40,19 +40,14 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.UniTrack.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.UniTrack.Card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                app:strokeColor="#FECDD3"
-                app:strokeWidth="1dp">
+            android:layout_margin="16dp"
+            app:cardCornerRadius="20dp"
+            app:strokeColor="#FECDD3"
+            app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -146,7 +141,5 @@
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

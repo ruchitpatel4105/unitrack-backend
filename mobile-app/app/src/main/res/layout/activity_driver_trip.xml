@@ -55,18 +55,13 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
+        <!-- Route Summary Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.UniTrack.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Route Summary Card -->
-            <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.UniTrack.Card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp">
+            android:layout_margin="16dp"
+            app:cardCornerRadius="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -184,6 +179,8 @@
                 style="@style/Widget.UniTrack.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="20dp"
                 android:text="Conclude Trip" />
 
@@ -193,12 +190,14 @@
                 style="@style/Widget.UniTrack.Button.Danger"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
                 android:background="@drawable/bg_sos_button"
                 android:text="🚨 EMERGENCY SOS"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { ActiveTrip } from '../types';
-import { UserCheck, Phone, Bus, Clock, Calendar, CheckCircle2, Navigation } from 'lucide-react';
+import { UserCheck, Phone, Clock } from 'lucide-react';
 
 export const DriverTripsPage: React.FC = () => {
   const [trips, setTrips] = useState<ActiveTrip[]>([]);

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { Bus, Route, User } from '../types';
-import { Plus, Edit2, Trash2, Bus as BusIcon, UserCheck, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Bus, Route } from '../types';
+import { Plus, Edit2, Trash2, Bus as BusIcon } from 'lucide-react';
 
 export const BusManagementPage: React.FC = () => {
   const [buses, setBuses] = useState<Bus[]>([]);
   const [routes, setRoutes] = useState<Route[]>([]);
-  const [drivers, setDrivers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Modal State
