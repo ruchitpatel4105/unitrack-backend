@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.UniTrack"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="34">
+
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <!-- 1. Launcher: Splash Activity -->
+        <activity
+            android:name=".activities.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.UniTrack.NoActionBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 2. Role Selection -->
+        <activity
+            android:name=".activities.RoleSelectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.UniTrack.NoActionBar" />
+
+        <!-- Student Flow Activities -->
+        <activity
+            android:name=".activities.StudentLoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.StudentRegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.StudentDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.LiveBusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.RouteListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.RouteDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.BusDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.LostFoundListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ReportLostItemActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.ReportFoundItemActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.ItemDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AiMatchDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ClaimItemActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.ClaimStatusActivity"
+            android:exported="false" />
+
+        <!-- Driver Flow Activities -->
+        <activity
+            android:name=".activities.DriverLoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.DriverDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.DriverTripActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.DriverEmergencyActivity"
+            android:exported="false" />
+
+        <!-- Common Activities -->
+        <activity
+            android:name=".activities.NotificationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="false" />
+
+        <!-- Foreground Service for Driver GPS Telemetry -->
+        <service
+            android:name=".services.GpsTrackingService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <!-- Push Notifications Service -->
+        <service
+            android:name=".services.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>

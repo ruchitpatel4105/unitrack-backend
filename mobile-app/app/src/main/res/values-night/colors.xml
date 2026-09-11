@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Emerald / Greens (High Contrast for Dark Mode) -->
+    <color name="primary">#10B981</color>
+    <color name="primary_dark">#059669</color>
+    <color name="primary_light">#34D399</color>
+    <color name="primary_container">#064E3B</color>
+    <color name="on_primary_container">#A7F3D0</color>
+
+    <!-- Secondary / Accents -->
+    <color name="secondary">#0B0F17</color>
+    <color name="secondary_light">#1E293B</color>
+    <color name="accent">#FBBF24</color>
+    <color name="accent_light">#78350F</color>
+
+    <!-- Alerts / SOS -->
+    <color name="danger">#FB7185</color>
+    <color name="danger_dark">#F43F5E</color>
+    <color name="danger_light">#881337</color>
+    <color name="warning">#FBBF24</color>
+    <color name="success">#34D399</color>
+
+    <!-- Dark Theme Neutrals -->
+    <color name="pure_white">#FFFFFF</color>
+    <color name="white">#1E293B</color> <!-- Maps hardcoded @color/white cleanly in dark mode -->
+    <color name="background">#0F172A</color>
+    <color name="surface">#1E293B</color>
+    <color name="card_background">#1E293B</color>
+    <color name="input_background">#0F172A</color>
+    <color name="input_text">#F8FAFC</color>
+    <color name="input_hint">#94A3B8</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_hint">#64748B</color>
+    <color name="divider">#334155</color>
+    <color name="border">#334155</color>
+    <color name="top_bar_bg">#1E293B</color>
+    <color name="bottom_nav_bg">#1E293B</color>
+</resources>

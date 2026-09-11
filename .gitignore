@@ -1,0 +1,29 @@
+# Node / JavaScript
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+
+# Web Build Output
+web-app/dist/
+web-app/.vite/
+
+# Android / Gradle
+.gradle/
+build/
+*/build/
+*.iml
+.idea/
+local.properties
+.DS_Store
+*.apk
+*.aab
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Uploads directory contents (preserve directory)
+uploads/*
+!uploads/.gitkeep
+cloudflared.exe

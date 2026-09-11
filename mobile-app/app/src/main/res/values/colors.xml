@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Emerald / Greens -->
+    <color name="primary">#059669</color>
+    <color name="primary_dark">#047857</color>
+    <color name="primary_light">#10B981</color>
+    <color name="primary_container">#D1FAE5</color>
+    <color name="on_primary_container">#065F46</color>
+
+    <!-- Secondary / Accents -->
+    <color name="secondary">#0F172A</color>
+    <color name="secondary_light">#1E293B</color>
+    <color name="accent">#F59E0B</color>
+    <color name="accent_light">#FEF3C7</color>
+
+    <!-- Alerts / SOS -->
+    <color name="danger">#E11D48</color>
+    <color name="danger_dark">#BE123C</color>
+    <color name="danger_light">#FFE4E6</color>
+    <color name="warning">#D97706</color>
+    <color name="success">#10B981</color>
+
+    <!-- Light Theme Neutrals -->
+    <color name="pure_white">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="background">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="input_background">#FFFFFF</color>
+    <color name="input_text">#0F172A</color>
+    <color name="input_hint">#64748B</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_hint">#94A3B8</color>
+    <color name="divider">#E2E8F0</color>
+    <color name="border">#E2E8F0</color>
+    <color name="top_bar_bg">#FFFFFF</color>
+    <color name="bottom_nav_bg">#FFFFFF</color>
+</resources>

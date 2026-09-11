@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Uni-Track</string>
+    <string name="app_tagline">Smart Campus Transit &amp; Lost Item Recovery</string>
+
+    <!-- Role Selection -->
+    <string name="role_title">Select Your Profile</string>
+    <string name="role_subtitle">Choose your portal to proceed to your tailored experience</string>
+    <string name="role_student">Student Portal</string>
+    <string name="role_student_desc">Track campus shuttles, routes, stops, and Lost &amp; Found items.</string>
+    <string name="role_driver">Driver Portal</string>
+    <string name="role_driver_desc">Transmit live GPS telemetry, start assigned route trips, and emergency SOS.</string>
+
+    <!-- Auth -->
+    <string name="login">Log In</string>
+    <string name="register">Register</string>
+    <string name="logout">Log Out</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="student_id_or_phone">Student ID or Phone</string>
+    <string name="driver_id_or_phone">Driver ID or Phone</string>
+    <string name="password">Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email Address</string>
+    <string name="phone_number">Phone Number</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_live_bus">Live Bus</string>
+    <string name="nav_routes">Routes</string>
+    <string name="nav_lost_found">Lost &amp; Found</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_my_bus">My Bus</string>
+    <string name="nav_trip">Trip</string>
+    <string name="nav_emergency">Emergency</string>
+
+    <!-- Lost & Found -->
+    <string name="report_lost_item">Report Lost Item</string>
+    <string name="report_found_item">Report Found Item</string>
+    <string name="claim_item">Claim This Item</string>
+    <string name="item_title">Item Title</string>
+    <string name="item_description">Description</string>
+    <string name="item_category">Category</string>
+    <string name="item_color">Color</string>
+    <string name="item_location">Location / Bus</string>
+
+    <!-- Driver Trip & Emergency -->
+    <string name="start_trip">Start Trip</string>
+    <string name="end_trip">End Trip</string>
+    <string name="emergency_sos">EMERGENCY SOS</string>
+    <string name="emergency_dialog_msg">Are you sure you want to trigger an immediate emergency alert? Dispatch will receive your GPS coordinates.</string>
+
+    <!-- API & Keys -->
+    <string name="google_maps_key" translatable="false">YOUR_GOOGLE_MAPS_API_KEY_HERE</string>
+</resources>

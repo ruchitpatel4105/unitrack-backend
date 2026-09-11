@@ -1,0 +1,25 @@
+{
+  "name": "uni-track-root",
+  "version": "1.0.0",
+  "description": "Uni-Track: Enterprise University Bus Tracking, Fleet Management & Lost-and-Found System",
+  "scripts": {
+    "backend:install": "cd backend && npm install",
+    "backend:start": "cd backend && npm start",
+    "backend:dev": "cd backend && npm run dev",
+    "web:install": "cd web-app && npm install",
+    "web:dev": "cd web-app && npm run dev",
+    "web:build": "cd web-app && npm run build",
+    "install:all": "npm run backend:install && npm run web:install"
+  },
+  "keywords": [
+    "bus-tracking",
+    "android",
+    "socket.io",
+    "gps",
+    "fleet-management",
+    "lost-and-found",
+    "university"
+  ],
+  "author": "Uni-Track Team",
+  "license": "MIT"
+}

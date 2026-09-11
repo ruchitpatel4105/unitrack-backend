@@ -1,0 +1,129 @@
+package com.unitrack.app.fragments;
+
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import com.unitrack.app.R;
+import com.unitrack.app.activities.DriverEmergencyActivity;
+import com.unitrack.app.gps.LocationHelper;
+import com.unitrack.app.models.ApiResponse;
+import com.unitrack.app.models.Trip;
+import com.unitrack.app.network.ApiClient;
+import com.unitrack.app.services.GpsTrackingService;
+import com.unitrack.app.socket.SocketManager;
+import com.unitrack.app.utils.Constants;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class DriverTripFragment extends Fragment {
+
+    private TextView tvRouteName, tvBus, tvSpeed, tvAccuracy;
+    private Button btnTripToggle, btnEmergency;
+    private LocationHelper locationHelper;
+    private boolean isTripActive = true;
+    private Trip currentTrip;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_driver_trip, container, false);
+
+        tvRouteName = view.findViewById(R.id.tvFragTripRouteName);
+        tvBus = view.findViewById(R.id.tvFragTripBus);
+        tvSpeed = view.findViewById(R.id.tvFragSpeed);
+        tvAccuracy = view.findViewById(R.id.tvFragAccuracy);
+        btnTripToggle = view.findViewById(R.id.btnTripStartEnd);
+        btnEmergency = view.findViewById(R.id.btnFragEmergency);
+
+        locationHelper = new LocationHelper(requireContext());
+
+        btnTripToggle.setOnClickListener(v -> {
+            if (isTripActive) {
+                endTrip();
+            } else {
+                startTrip();
+            }
+        });
+
+        btnEmergency.setOnClickListener(v -> {
+            startActivity(new Intent(requireContext(), DriverEmergencyActivity.class));
+        });
+
+        fetchTrip();
+        startGpsService();
+
+        return view;
+    }
+
+    private void fetchTrip() {
+        ApiClient.getService(requireContext()).getDriverCurrentTrip().enqueue(new Callback<ApiResponse<Trip>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Trip>> call, Response<ApiResponse<Trip>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    currentTrip = response.body().getData();
+                    tvRouteName.setText(currentTrip.getRouteName());
+                    tvBus.setText("Vehicle: " + currentTrip.getBusNumber() + " • " + currentTrip.getLicensePlate());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Trip>> call, Throwable t) {}
+        });
+    }
+
+    private void startTrip() {
+        isTripActive = true;
+        btnTripToggle.setText("Conclude Trip");
+        startGpsService();
+        Toast.makeText(requireContext(), "Trip commenced! GPS beacon broadcasting live telemetry.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void endTrip() {
+        isTripActive = false;
+        btnTripToggle.setText("Start Scheduled Trip");
+        stopGpsService();
+        Toast.makeText(requireContext(), "Trip concluded successfully.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void startGpsService() {
+        Intent serviceIntent = new Intent(requireContext(), GpsTrackingService.class);
+        serviceIntent.putExtra(Constants.EXTRA_BUS_ID, currentTrip != null ? currentTrip.getBusId() : 1);
+        if (currentTrip != null) serviceIntent.putExtra("extra_trip_id", currentTrip.getId());
+        ContextCompat.startForegroundService(requireContext(), serviceIntent);
+
+        locationHelper.startLocationUpdates(3000, new LocationHelper.OnLocationUpdatedListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                if (getActivity() == null) return;
+                getActivity().runOnUiThread(() -> {
+                    double speed = location.hasSpeed() ? (location.getSpeed() * 3.6) : 38.0;
+                    tvSpeed.setText(String.format("%.0f km/h", speed));
+                    tvAccuracy.setText(String.format("±%.0fm", location.getAccuracy()));
+                });
+            }
+        });
+    }
+
+    private void stopGpsService() {
+        Intent serviceIntent = new Intent(requireContext(), GpsTrackingService.class);
+        requireContext().stopService(serviceIntent);
+        locationHelper.stopLocationUpdates();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (locationHelper != null) locationHelper.stopLocationUpdates();
+    }
+}
