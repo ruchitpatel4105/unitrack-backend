@@ -443,6 +443,63 @@ async function autoMigrateTables(poolInstance) {
       // Column already absent
     }
 
+    // Ensure all 4 campus routes exist in MySQL
+    try {
+      await poolInstance.query(`
+        INSERT INTO routes (id, route_name, route_code, description, start_point, end_point, estimated_duration_mins, distance_km, is_active) VALUES
+        (1, 'Vadodara Station Express', 'RT-001', 'Vadodara Railway Station to Parul University via Waghodia Road', 'Vadodara Railway Station', 'Parul University Main Gate', 45, 18.50, 1),
+        (2, 'Sama / Gorwa Route', 'RT-002', 'Sama Road and Gorwa area to Parul University Campus', 'Sama Road BRTS Stop', 'Parul University Main Gate', 40, 16.20, 1),
+        (3, 'Karelibaug / Fatehgunj Route', 'RT-003', 'Karelibaug and Fatehgunj area to Parul University via Subhanpura', 'Karelibaug Circle', 'Parul University Main Gate', 50, 20.10, 1),
+        (4, 'Waghodia / Padra Route', 'RT-004', 'Waghodia town and Padra road corridor to Parul University', 'Waghodia Bus Stand', 'Parul University Main Gate', 35, 12.80, 1)
+        ON DUPLICATE KEY UPDATE route_name = VALUES(route_name), is_active = 1
+      `);
+      await poolInstance.query(`
+        INSERT INTO route_stops (id, route_id, stop_name, stop_order, latitude, longitude, estimated_time_offset_mins) VALUES
+        (1,  1, 'Vadodara Railway Station',  1, 22.311900, 73.182000, 0),
+        (2,  1, 'Sayajigunj Circle',         2, 22.309000, 73.189000, 8),
+        (3,  1, 'Subhanpura Crossroads',     3, 22.302000, 73.220000, 18),
+        (4,  1, 'Waghodia Crossroads',       4, 22.296500, 73.238000, 30),
+        (5,  1, 'Parul University Main Gate',5, 22.288700, 73.363400, 45),
+        (6,  2, 'Sama Road BRTS Stop',       1, 22.325000, 73.200000, 0),
+        (7,  2, 'Gorwa Circle',              2, 22.320000, 73.210000, 7),
+        (8,  2, 'Harni Road Junction',       3, 22.310000, 73.235000, 18),
+        (9,  2, 'Waghodia Crossroads',       4, 22.296500, 73.238000, 27),
+        (10, 2, 'Parul University Main Gate',5, 22.288700, 73.363400, 40),
+        (11, 3, 'Karelibaug Circle',         1, 22.320000, 73.190000, 0),
+        (12, 3, 'Fatehgunj Bus Stop',        2, 22.321000, 73.195000, 6),
+        (13, 3, 'Subhanpura Crossroads',     3, 22.302000, 73.220000, 20),
+        (14, 3, 'Waghodia Crossroads',       4, 22.296500, 73.238000, 33),
+        (15, 3, 'Parul University Main Gate',5, 22.288700, 73.363400, 50),
+        (16, 4, 'Waghodia Bus Stand',        1, 22.330000, 73.300000, 0),
+        (17, 4, 'Padra Road Junction',       2, 22.315000, 73.310000, 8),
+        (18, 4, 'Karjan Crossroads',         3, 22.300000, 73.330000, 18),
+        (19, 4, 'Parul University Main Gate',4, 22.288700, 73.363400, 35)
+        ON DUPLICATE KEY UPDATE stop_name = VALUES(stop_name)
+      `);
+    } catch (ignored) {}
+
+    // Ensure lost & found items exist in MySQL
+    try {
+      await poolInstance.query(`
+        INSERT INTO lost_found_items (id, user_id, type, title, description, category, color, item_date, location_name, bus_id, image_url, status) VALUES
+        (1, 2, 'lost', 'Black Lenovo ThinkPad Laptop', 'Lenovo ThinkPad X1 Carbon with university sticker on the lid. Left near seat 14.', 'electronics', 'Black', CURRENT_DATE - INTERVAL 1 DAY, 'Bus 1 rear seats', 1, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400', 'matched'),
+        (2, 4, 'found', 'Black Lenovo Laptop with Stickers', 'Found on seat 14 after morning express run. Has blue university sticker.', 'electronics', 'Black', CURRENT_DATE - INTERVAL 1 DAY, 'Bus 1 Terminal', 1, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400', 'matched'),
+        (3, 3, 'lost', 'Brown Leather Student ID Card Wallet', 'Contains student ID card for Samantha Reed and bus pass voucher.', 'documents', 'Brown', CURRENT_DATE, 'Vadodara Station bus stop', 2, 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400', 'reported'),
+        (4, 5, 'found', 'Scientific Calculator Casio fx-991EX', 'Black and white dual tone scientific calculator found in aisle.', 'electronics', 'Black', CURRENT_DATE, 'Bus 2 front seats', 2, 'https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?w=400', 'reported')
+        ON DUPLICATE KEY UPDATE title = VALUES(title), status = VALUES(status)
+      `);
+      await poolInstance.query(`
+        INSERT INTO lost_found_matches (id, lost_item_id, found_item_id, match_score, match_reasons, status) VALUES
+        (1, 1, 2, 94.50, 'Identical brand (Lenovo), exact category match (electronics), color match (black), exact same bus (Bus 1) within same 24-hour timeframe, and matching sticker description.', 'suggested')
+        ON DUPLICATE KEY UPDATE match_score = VALUES(match_score)
+      `);
+      await poolInstance.query(`
+        INSERT INTO lost_found_claims (id, item_id, claimant_id, proof_description, proof_image_url, status, admin_notes) VALUES
+        (1, 2, 2, 'I can verify the serial number ending in 9841 and unlock the system using my fingerprint.', 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400', 'pending', 'Awaiting claimant serial number verification in admin office')
+        ON DUPLICATE KEY UPDATE status = VALUES(status)
+      `);
+    } catch (ignored) {}
+
     // Ensure all 4 campus routes have live active in_progress trips and real-time telemetry
     try {
       await poolInstance.query(`

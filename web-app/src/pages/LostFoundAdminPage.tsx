@@ -16,15 +16,17 @@ export const LostFoundAdminPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const [itemRes, claimRes] = await Promise.all([
-        api.get('/lost-found'),
-        api.get('/lost-found/claims')
-      ]);
-
+      const itemRes = await api.get('/lost-found');
       if (itemRes.data.success) setItems(itemRes.data.data);
+    } catch (err) {
+      console.error('Error fetching lost & found items:', err);
+    }
+
+    try {
+      const claimRes = await api.get('/lost-found/claims');
       if (claimRes.data.success) setClaims(claimRes.data.data);
     } catch (err) {
-      console.error('Error fetching lost & found data:', err);
+      console.error('Error fetching claims:', err);
     } finally {
       setIsLoading(false);
     }

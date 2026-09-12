@@ -84,6 +84,7 @@ public class LostFoundListActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ApiResponse<List<LostFoundItem>>> call, Throwable t) {
                 swipeRefresh.setRefreshing(false);
+                android.widget.Toast.makeText(LostFoundListActivity.this, "Connecting to cloud... Pull down to refresh", android.widget.Toast.LENGTH_SHORT).show();
             }
         });
     }

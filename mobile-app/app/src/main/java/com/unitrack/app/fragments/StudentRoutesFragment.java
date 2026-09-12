@@ -53,10 +53,12 @@ public class StudentRoutesFragment extends Fragment {
     }
 
     private void fetchRoutes() {
+        if (!isAdded() || getContext() == null) return;
         swipeRefresh.setRefreshing(true);
         ApiClient.getService(requireContext()).getAllRoutes().enqueue(new Callback<ApiResponse<List<Route>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<Route>>> call, Response<ApiResponse<List<Route>>> response) {
+                if (!isAdded() || getContext() == null) return;
                 swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     adapter.setRoutes(response.body().getData());
@@ -65,8 +67,16 @@ public class StudentRoutesFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ApiResponse<List<Route>>> call, Throwable t) {
+                if (!isAdded() || getContext() == null) return;
                 swipeRefresh.setRefreshing(false);
+                android.widget.Toast.makeText(getContext(), "Connecting to cloud... Pull down to refresh", android.widget.Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchRoutes();
     }
 }

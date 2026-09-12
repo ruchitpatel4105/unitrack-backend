@@ -82,10 +82,12 @@ public class StudentLostFoundFragment extends Fragment {
     }
 
     private void fetchItems() {
+        if (!isAdded() || getContext() == null) return;
         swipeRefresh.setRefreshing(true);
         ApiClient.getService(requireContext()).getLostFoundItems(currentFilter, null, null).enqueue(new Callback<ApiResponse<List<LostFoundItem>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<LostFoundItem>>> call, Response<ApiResponse<List<LostFoundItem>>> response) {
+                if (!isAdded() || getContext() == null) return;
                 swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     adapter.setItems(response.body().getData());
@@ -94,7 +96,9 @@ public class StudentLostFoundFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ApiResponse<List<LostFoundItem>>> call, Throwable t) {
+                if (!isAdded() || getContext() == null) return;
                 swipeRefresh.setRefreshing(false);
+                android.widget.Toast.makeText(getContext(), "Connecting to cloud... Pull down to refresh", android.widget.Toast.LENGTH_SHORT).show();
             }
         });
     }

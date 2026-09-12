@@ -60,7 +60,14 @@ public class RouteListActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ApiResponse<List<Route>>> call, Throwable t) {
                 swipeRefresh.setRefreshing(false);
+                android.widget.Toast.makeText(RouteListActivity.this, "Connecting to cloud... Pull down to refresh", android.widget.Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchRoutes();
     }
 }

@@ -51,7 +51,7 @@ async function getItems(req, res) {
       let sql = `
         SELECT lf.*, u.name as reporter_name, u.phone as reporter_phone, b.bus_number
         FROM lost_found_items lf
-        JOIN users u ON lf.user_id = u.id
+        LEFT JOIN users u ON lf.user_id = u.id
         LEFT JOIN buses b ON lf.bus_id = b.id
         WHERE 1=1
       `;
@@ -127,7 +127,7 @@ async function getItemById(req, res) {
       const rows = await query(
         `SELECT lf.*, u.name as reporter_name, u.phone as reporter_phone, u.email as reporter_email, b.bus_number
          FROM lost_found_items lf
-         JOIN users u ON lf.user_id = u.id
+         LEFT JOIN users u ON lf.user_id = u.id
          LEFT JOIN buses b ON lf.bus_id = b.id
          WHERE lf.id = ?`,
         [id]

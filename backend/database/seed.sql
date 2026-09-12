@@ -74,3 +74,32 @@ INSERT INTO trip_locations (id, trip_id, bus_id, latitude, longitude, speed, hea
 (3, 3, 3, 22.315000, 73.205000, 35.0, 95.0, 3.5),
 (4, 4, 4, 22.310000, 73.315000, 40.0, 70.0, 4.5)
 ON DUPLICATE KEY UPDATE speed=VALUES(speed);
+
+-- 7. Insert Lost & Found Items
+INSERT INTO lost_found_items (id, user_id, type, title, description, category, color, item_date, location_name, bus_id, image_url, status) VALUES
+(1, 2, 'lost', 'Black Lenovo ThinkPad Laptop', 'Lenovo ThinkPad X1 Carbon with university sticker on the lid. Left near seat 14.', 'electronics', 'Black', CURRENT_DATE - INTERVAL 1 DAY, 'Bus 1 rear seats', 1, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400', 'matched'),
+(2, 4, 'found', 'Black Lenovo Laptop with Stickers', 'Found on seat 14 after morning express run. Has blue university sticker.', 'electronics', 'Black', CURRENT_DATE - INTERVAL 1 DAY, 'Bus 1 Terminal', 1, 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400', 'matched'),
+(3, 3, 'lost', 'Brown Leather Student ID Card Wallet', 'Contains student ID card for Samantha Reed and bus pass voucher.', 'documents', 'Brown', CURRENT_DATE, 'Vadodara Station bus stop', 2, 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400', 'reported'),
+(4, 5, 'found', 'Scientific Calculator Casio fx-991EX', 'Black and white dual tone scientific calculator found in aisle.', 'electronics', 'Black', CURRENT_DATE, 'Bus 2 front seats', 2, 'https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?w=400', 'reported')
+ON DUPLICATE KEY UPDATE title=VALUES(title), status=VALUES(status);
+
+-- 8. Insert AI Match Record
+INSERT INTO lost_found_matches (id, lost_item_id, found_item_id, match_score, match_reasons, status) VALUES
+(1, 1, 2, 94.50, 'Identical brand (Lenovo), exact category match (electronics), color match (black), exact same bus (Bus 1) within same 24-hour timeframe, and matching sticker description.', 'suggested')
+ON DUPLICATE KEY UPDATE match_score=VALUES(match_score);
+
+-- 9. Insert Sample Claim
+INSERT INTO lost_found_claims (id, item_id, claimant_id, proof_description, proof_image_url, status, admin_notes) VALUES
+(1, 2, 2, 'I can verify the serial number ending in 9841 and unlock the system using my fingerprint.', 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400', 'pending', 'Awaiting claimant serial number verification in admin office')
+ON DUPLICATE KEY UPDATE status=VALUES(status);
+
+-- 10. Sample Emergency Alert
+INSERT INTO emergency_alerts (id, driver_id, bus_id, trip_id, alert_type, latitude, longitude, notes, status) VALUES
+(1, 4, 1, 1, 'breakdown', 22.305000, 73.210000, 'Minor engine temperature sensor indicator warning. Bus pulled over safely at Sayajigunj Circle.', 'resolved')
+ON DUPLICATE KEY UPDATE status=VALUES(status);
+
+-- 11. Initial Notifications
+INSERT INTO notifications (id, user_id, role, title, message, type, is_read) VALUES
+(1, 2, 'student', 'AI Match Found!', 'We found a 94.5% potential match for your reported lost Lenovo ThinkPad on Bus 1.', 'match', 0),
+(2, 1, 'admin', 'Fleet Update', 'Bus 1 commenced morning route RT-001 (Vadodara Station Express).', 'trip', 0)
+ON DUPLICATE KEY UPDATE title=VALUES(title);
