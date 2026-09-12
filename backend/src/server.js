@@ -72,6 +72,20 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/students', studentRoutes);
 
+// Serve web-app dist if built and available
+const webAppDistPath = fs.existsSync(path.resolve(__dirname, '../../web-app/dist'))
+  ? path.resolve(__dirname, '../../web-app/dist')
+  : path.resolve(__dirname, '../web-app/dist');
+if (fs.existsSync(webAppDistPath)) {
+  app.use(express.static(webAppDistPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(webAppDistPath, 'index.html'));
+  });
+}
+
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('Unhandled Error:', err);

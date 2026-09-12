@@ -14,17 +14,30 @@ export const DashboardPage: React.FC = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const [mRes, tRes, aRes] = await Promise.all([
-        api.get('/analytics/dashboard'),
-        api.get('/trips/active'),
-        api.get('/emergency')
-      ]);
+      try {
+        const mRes = await api.get('/analytics/dashboard');
+        if (mRes.data?.success) setMetrics(mRes.data.data);
+      } catch (err) {
+        console.warn('Dashboard metrics fetch error:', err);
+      }
 
-      if (mRes.data.success) setMetrics(mRes.data.data);
-      if (tRes.data.success) setActiveTrips(tRes.data.data);
-      if (aRes.data.success) setRecentAlerts(aRes.data.data.slice(0, 4));
-    } catch (err) {
-      console.error('Error fetching dashboard data:', err);
+      try {
+        const tRes = await api.get('/trips/active');
+        if (tRes.data?.success && Array.isArray(tRes.data.data)) {
+          setActiveTrips(tRes.data.data);
+        }
+      } catch (err) {
+        console.warn('Active trips fetch error:', err);
+      }
+
+      try {
+        const aRes = await api.get('/emergency');
+        if (aRes.data?.success && Array.isArray(aRes.data.data)) {
+          setRecentAlerts(aRes.data.data.slice(0, 4));
+        }
+      } catch (err) {
+        console.warn('Emergency alerts fetch error:', err);
+      }
     } finally {
       setIsLoading(false);
     }

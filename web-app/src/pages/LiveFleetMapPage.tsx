@@ -15,16 +15,24 @@ export const LiveFleetMapPage: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const [tripsRes, routesRes] = await Promise.all([
-        api.get('/trips/active'),
-        api.get('/routes')
-      ]);
+      try {
+        const tripsRes = await api.get('/trips/active');
+        if (tripsRes.data?.success && Array.isArray(tripsRes.data.data)) {
+          setActiveTrips(tripsRes.data.data);
+        }
+      } catch (err) {
+        console.warn('Trips fetch error:', err);
+      }
 
-      if (tripsRes.data.success) setActiveTrips(tripsRes.data.data);
-      if (routesRes.data.success) setRoutes(routesRes.data.data);
+      try {
+        const routesRes = await api.get('/routes');
+        if (routesRes.data?.success && Array.isArray(routesRes.data.data)) {
+          setRoutes(routesRes.data.data);
+        }
+      } catch (err) {
+        console.warn('Routes fetch error:', err);
+      }
       setLastSync(new Date());
-    } catch (err) {
-      console.error('Error fetching live map data:', err);
     } finally {
       setIsLoading(false);
     }
