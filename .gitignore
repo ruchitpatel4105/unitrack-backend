@@ -27,3 +27,4 @@ captures/
 uploads/*
 !uploads/.gitkeep
 cloudflared.exe
+scratch/
