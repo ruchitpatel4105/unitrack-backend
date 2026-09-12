@@ -79,8 +79,8 @@ export const DriverTripsPage: React.FC = () => {
                   <span className="font-bold text-emerald-700">{trip.route_name}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500">Speed:</span>
-                  <span className="font-bold text-slate-800">{trip.current_speed || 0} km/h</span>
+                  <span className="text-slate-500">Transit Status:</span>
+                  <span className="font-bold text-emerald-700">In Transit • Live GPS</span>
                 </div>
               </div>
 

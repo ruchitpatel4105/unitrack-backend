@@ -67,8 +67,9 @@ public class StudentLiveBusFragment extends Fragment {
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
                     isMapLoaded = true;
+                    renderAllBuses();
                     if (selectedTrip != null) {
-                        renderTripOnMap(selectedTrip);
+                        mapWebView.evaluateJavascript(String.format(Locale.US, "window.focusBus(%d);", selectedTrip.getBusId()), null);
                     }
                 }
             });
@@ -83,12 +84,17 @@ public class StudentLiveBusFragment extends Fragment {
     }
 
     private void fetchActiveTrips() {
+        if (!isAdded() || getContext() == null) return;
         ApiClient.getService(requireContext()).getActiveTrips().enqueue(new Callback<ApiResponse<List<Trip>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<Trip>>> call, Response<ApiResponse<List<Trip>>> response) {
+                if (!isAdded()) return;
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null && !response.body().getData().isEmpty()) {
                     activeTrips = response.body().getData();
+                    selectedTrip = activeTrips.get(0);
                     setupSpinner();
+                    updateTripDisplay(selectedTrip);
+                    renderAllBuses();
                 } else {
                     displayNoActiveTrips();
                 }
@@ -96,6 +102,7 @@ public class StudentLiveBusFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ApiResponse<List<Trip>>> call, Throwable t) {
+                if (!isAdded()) return;
                 displayNoActiveTrips();
             }
         });
@@ -105,10 +112,10 @@ public class StudentLiveBusFragment extends Fragment {
         if (!isAdded() || getContext() == null) return;
         tvBusNumber.setText("No Active Trips Running");
         tvBusRoute.setText("All campus buses are currently stationed at Parul Campus Depot");
-        tvSpeedBadge.setText("0 km/h • Depot");
+        tvSpeedBadge.setText("DEPOT");
         tvEta.setText("Depot • Standing by for Driver");
         tvLiveCoords.setText("GPS: 22.2887° N, 73.3634° E (Campus Depot)");
-        tvLiveTelemetrySpeed.setText("Status: Stationed at Depot");
+        tvLiveTelemetrySpeed.setText("Status: Stationed at Campus Depot");
 
         List<String> labels = new ArrayList<>();
         labels.add("No Active Trips (Buses at Campus Depot)");
@@ -135,13 +142,6 @@ public class StudentLiveBusFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, labels);
         spBusSelect.setAdapter(adapter);
 
-        // Render all running buses across routes on map
-        if (mapWebView != null && isMapLoaded) {
-            for (Trip t : activeTrips) {
-                renderTripOnMap(t);
-            }
-        }
-
         spBusSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -160,24 +160,33 @@ public class StudentLiveBusFragment extends Fragment {
     private void updateTripDisplay(Trip trip) {
         tvBusNumber.setText("Bus " + trip.getBusNumber() + " (" + trip.getLicensePlate() + ")");
         tvBusRoute.setText(trip.getRouteName());
-        double speed = trip.getCurrentSpeed() != null ? trip.getCurrentSpeed() : 0.0;
-        tvSpeedBadge.setText(String.format(Locale.US, "%.0f km/h", speed));
+        tvSpeedBadge.setText("IN TRANSIT");
         tvEta.setText("Live On Route • GPS Connected");
-
-        renderTripOnMap(trip);
-    }
-
-    private void renderTripOnMap(Trip trip) {
-        if (mapWebView == null || !isMapLoaded) return;
         double lat = trip.getCurrentLatitude() != null ? trip.getCurrentLatitude() : 22.2887;
         double lng = trip.getCurrentLongitude() != null ? trip.getCurrentLongitude() : 73.3634;
-        double speed = trip.getCurrentSpeed() != null ? trip.getCurrentSpeed() : 0.0;
-        double heading = trip.getCurrentHeading() != null ? trip.getCurrentHeading() : 0.0;
+        tvLiveCoords.setText(String.format(Locale.US, "GPS: %.4f° N, %.4f° E", lat, lng));
+        tvLiveTelemetrySpeed.setText("Status: In Transit • Real-Time Tracking");
 
-        String js = String.format(Locale.US,
-                "window.updateBusLocation(%d, '%s', %f, %f, %f, %f);",
-                trip.getBusId(), trip.getBusNumber(), lat, lng, speed, heading);
-        mapWebView.evaluateJavascript(js, null);
+        if (mapWebView != null && isMapLoaded) {
+            mapWebView.evaluateJavascript(String.format(Locale.US, "window.focusBus(%d);", trip.getBusId()), null);
+        }
+    }
+
+    private void renderAllBuses() {
+        if (mapWebView == null || !isMapLoaded || activeTrips == null || activeTrips.isEmpty()) return;
+        for (Trip t : activeTrips) {
+            double lat = t.getCurrentLatitude() != null ? t.getCurrentLatitude() : 22.2887;
+            double lng = t.getCurrentLongitude() != null ? t.getCurrentLongitude() : 73.3634;
+            String js = String.format(Locale.US,
+                    "window.updateBusLocation(%d, '%s', %f, %f);",
+                    t.getBusId(), t.getBusNumber(), lat, lng);
+            mapWebView.evaluateJavascript(js, null);
+        }
+        if (selectedTrip != null) {
+            mapWebView.evaluateJavascript(String.format(Locale.US, "window.focusBus(%d);", selectedTrip.getBusId()), null);
+        } else {
+            mapWebView.evaluateJavascript("window.fitAllBuses();", null);
+        }
     }
 
     private void setupSocketListener() {
@@ -188,15 +197,15 @@ public class StudentLiveBusFragment extends Fragment {
                 if (getActivity() == null) return;
                 getActivity().runOnUiThread(() -> {
                     if (selectedTrip == null || selectedTrip.getBusId() == update.getBusId()) {
-                        tvSpeedBadge.setText(String.format(Locale.US, "%.0f km/h", update.getSpeed()));
+                        tvSpeedBadge.setText("IN TRANSIT");
                         tvLiveCoords.setText(String.format(Locale.US, "GPS: %.4f° N, %.4f° E", update.getLatitude(), update.getLongitude()));
-                        tvLiveTelemetrySpeed.setText(String.format(Locale.US, "Current Velocity: %.1f km/h", update.getSpeed()));
+                        tvLiveTelemetrySpeed.setText("Status: In Transit • Real-Time Tracking");
 
                         if (mapWebView != null && isMapLoaded) {
                             String busLabel = (selectedTrip != null) ? selectedTrip.getBusNumber() : ("Bus " + update.getBusId());
                             String js = String.format(Locale.US,
-                                    "window.updateBusLocation(%d, '%s', %f, %f, %f, %f);",
-                                    update.getBusId(), busLabel, update.getLatitude(), update.getLongitude(), update.getSpeed(), update.getHeading());
+                                    "window.updateBusLocation(%d, '%s', %f, %f);",
+                                    update.getBusId(), busLabel, update.getLatitude(), update.getLongitude());
                             mapWebView.evaluateJavascript(js, null);
                         }
                     }

@@ -136,8 +136,7 @@ public class DriverTripFragment extends Fragment {
             public void onLocationChanged(Location location) {
                 if (getActivity() == null) return;
                 getActivity().runOnUiThread(() -> {
-                    double speed = location.hasSpeed() ? (location.getSpeed() * 3.6) : 0.0;
-                    tvSpeed.setText(String.format(java.util.Locale.US, "%.0f km/h", speed));
+                    tvSpeed.setText("ACTIVE");
                     tvAccuracy.setText(location.hasAccuracy() ? String.format(java.util.Locale.US, "±%.0fm", location.getAccuracy()) : "—");
                 });
             }
@@ -148,6 +147,7 @@ public class DriverTripFragment extends Fragment {
         Intent serviceIntent = new Intent(requireContext(), GpsTrackingService.class);
         requireContext().stopService(serviceIntent);
         locationHelper.stopLocationUpdates();
+        if (tvSpeed != null) tvSpeed.setText("STANDBY");
     }
 
     @Override

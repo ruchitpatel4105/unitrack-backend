@@ -59,7 +59,7 @@ public class LiveBusActivity extends AppCompatActivity {
                     super.onPageFinished(view, url);
                     isMapLoaded = true;
                     if (activeTrip != null) {
-                        renderBusPosition(activeTrip.getCurrentLatitude(), activeTrip.getCurrentLongitude(), activeTrip.getBusNumber(), activeTrip.getCurrentSpeed(), activeTrip.getCurrentHeading());
+                        renderBusPosition(activeTrip.getCurrentLatitude(), activeTrip.getCurrentLongitude(), activeTrip.getBusNumber());
                     }
                 }
             });
@@ -81,13 +81,12 @@ public class LiveBusActivity extends AppCompatActivity {
                     currentBusNumber = activeTrip.getBusNumber();
                     tvRouteName.setText(activeTrip.getRouteName());
                     tvDriverInfo.setText("Driver: " + activeTrip.getDriverName() + " • Bus: " + activeTrip.getBusNumber());
-                    double speed = activeTrip.getCurrentSpeed() != null ? activeTrip.getCurrentSpeed() : 0.0;
-                    tvSpeedBadge.setText(String.format(Locale.US, "%.0f km/h", speed));
+                    tvSpeedBadge.setText("IN TRANSIT");
                     tvLiveStatus.setText("Live Trip in Progress");
 
                     double lat = activeTrip.getCurrentLatitude() != null ? activeTrip.getCurrentLatitude() : 22.2887;
                     double lng = activeTrip.getCurrentLongitude() != null ? activeTrip.getCurrentLongitude() : 73.3634;
-                    renderBusPosition(lat, lng, activeTrip.getBusNumber(), speed, activeTrip.getCurrentHeading());
+                    renderBusPosition(lat, lng, activeTrip.getBusNumber());
 
                     SocketManager.getInstance().trackBus(busId);
                 } else {
@@ -104,7 +103,7 @@ public class LiveBusActivity extends AppCompatActivity {
 
     private void displayDepotStandby() {
         tvLiveStatus.setText("Campus Standby • No Active Trips");
-        tvSpeedBadge.setText("0 km/h");
+        tvSpeedBadge.setText("DEPOT");
         tvRouteName.setText("Campus Transit Depot");
         tvDriverInfo.setText("Status: Stationed at Parul Campus Depot");
         tvCoordinates.setText("GPS: 22.2887° N, 73.3634° E (Campus Depot)");
@@ -123,25 +122,24 @@ public class LiveBusActivity extends AppCompatActivity {
             public void onLocationReceived(LocationUpdate update) {
                 runOnUiThread(() -> {
                     tvLiveStatus.setText("Live GPS Streaming Active");
-                    tvSpeedBadge.setText(String.format(Locale.US, "%.0f km/h", update.getSpeed()));
+                    tvSpeedBadge.setText("IN TRANSIT");
                     tvCoordinates.setText(String.format(Locale.US, "GPS: %.4f° N, %.4f° E", update.getLatitude(), update.getLongitude()));
-                    renderBusPosition(update.getLatitude(), update.getLongitude(), currentBusNumber, update.getSpeed(), update.getHeading());
+                    renderBusPosition(update.getLatitude(), update.getLongitude(), currentBusNumber);
                 });
             }
         });
     }
 
-    private void renderBusPosition(Double lat, Double lng, String busTitle, Double speed, Double heading) {
+    private void renderBusPosition(Double lat, Double lng, String busTitle) {
         if (mapWebView == null || !isMapLoaded) return;
         double actualLat = lat != null ? lat : 22.2887;
         double actualLng = lng != null ? lng : 73.3634;
-        double actualSpeed = speed != null ? speed : 0.0;
-        double actualHeading = heading != null ? heading : 0.0;
 
         String js = String.format(Locale.US,
-                "window.updateBusLocation(%d, '%s', %f, %f, %f, %f);",
-                busId, busTitle != null ? busTitle : ("Bus " + busId), actualLat, actualLng, actualSpeed, actualHeading);
+                "window.updateBusLocation(%d, '%s', %f, %f);",
+                busId, busTitle != null ? busTitle : ("Bus " + busId), actualLat, actualLng);
         mapWebView.evaluateJavascript(js, null);
+        mapWebView.evaluateJavascript(String.format(Locale.US, "window.focusBus(%d);", busId), null);
     }
 
     @Override

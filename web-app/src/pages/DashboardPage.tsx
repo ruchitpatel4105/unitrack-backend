@@ -201,7 +201,7 @@ export const DashboardPage: React.FC = () => {
                   <div className="text-[11px] text-slate-500">Driver: {trip.driver_name}</div>
                 </div>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                  {trip.current_speed || 0} km/h
+                  In Transit
                 </span>
               </div>
             ))}

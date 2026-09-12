@@ -80,15 +80,15 @@
                             android:id="@+id/tvFragSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 km/h"
+                            android:text="STANDBY"
                             android:textColor="@color/text_primary"
-                            android:textSize="18sp"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Velocity"
+                            android:text="Status"
                             android:textColor="@color/text_secondary"
                             android:textSize="11sp" />
                     </LinearLayout>

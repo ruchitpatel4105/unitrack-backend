@@ -69,10 +69,10 @@ ON DUPLICATE KEY UPDATE status=VALUES(status);
 
 -- 6. Insert Live GPS Telemetry Locations
 INSERT INTO trip_locations (id, trip_id, bus_id, latitude, longitude, speed, heading, accuracy) VALUES
-(1, 1, 1, 22.305000, 73.210000, 38.0, 85.0, 4.0),
-(2, 2, 2, 22.318000, 73.220000, 32.0, 110.0, 5.0),
-(3, 3, 3, 22.315000, 73.205000, 35.0, 95.0, 3.5),
-(4, 4, 4, 22.310000, 73.315000, 40.0, 70.0, 4.5)
+(1, 1, 1, 22.305000, 73.210000, 0.0, 85.0, 4.0),
+(2, 2, 2, 22.318000, 73.220000, 0.0, 110.0, 5.0),
+(3, 3, 3, 22.315000, 73.205000, 0.0, 95.0, 3.5),
+(4, 4, 4, 22.310000, 73.315000, 0.0, 70.0, 4.5)
 ON DUPLICATE KEY UPDATE speed=VALUES(speed);
 
 -- 7. Insert Lost & Found Items

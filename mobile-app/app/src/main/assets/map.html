@@ -59,10 +59,11 @@
 <body>
   <div id="map"></div>
   <script>
+    // Panoramic view encompassing Vadodara City and Parul University Campus
     var map = L.map('map', {
       zoomControl: true,
       attributionControl: false
-    }).setView([22.2887, 73.3634], 15); // Parul University Campus, Vadodara
+    }).setView([22.3000, 73.2800], 12);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19
@@ -84,7 +85,6 @@
 
     // Dynamic Route Stops Loader (for City Up-Down routes)
     window.setRouteStops = function(stops) {
-      // Clear existing stops
       stopMarkers.forEach(function(m) { map.removeLayer(m); });
       stopMarkers = [];
       if (routeLine) {
@@ -109,7 +109,7 @@
         coords.push([s.lat, s.lng]);
       });
 
-      // Add Campus Terminal as final destination if not already present
+      // Add Campus Terminal as final destination
       coords.push([22.2887, 73.3634]);
 
       routeLine = L.polyline(coords, {
@@ -121,17 +121,15 @@
       map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
     };
 
-    // API called from Android Java
-    window.updateBusLocation = function(busId, busNumber, lat, lng, speed, heading) {
-      var isMoving = speed > 0;
-      var label = '🚌 ' + busNumber + (isMoving ? ' (' + Math.round(speed) + ' km/h)' : ' (Idle)');
-      var className = isMoving ? 'custom-bus-marker' : 'custom-bus-marker stopped';
+    // API called from Android Java - No fake speed numbers
+    window.updateBusLocation = function(busId, busNumber, lat, lng) {
+      var label = '🚌 ' + (busNumber.indexOf('Bus') === -1 ? 'Bus ' + busNumber : busNumber);
 
       var icon = L.divIcon({
         className: '',
-        html: '<div class="' + className + '">' + label + '</div>',
-        iconSize: [120, 30],
-        iconAnchor: [60, 15]
+        html: '<div class="custom-bus-marker">' + label + '</div>',
+        iconSize: [85, 30],
+        iconAnchor: [42, 15]
       });
 
       if (busMarkers[busId]) {
@@ -139,11 +137,32 @@
         busMarkers[busId].setIcon(icon);
       } else {
         var marker = L.marker([lat, lng], { icon: icon }).addTo(map);
-        marker.bindPopup('<b>' + busNumber + '</b><br>Speed: ' + speed + ' km/h');
+        marker.bindPopup('<b>' + label + '</b><br>Status: In Transit • On Route');
         busMarkers[busId] = marker;
       }
+    };
 
-      map.panTo([lat, lng]);
+    // Fit all buses and campus in one single view
+    window.fitAllBuses = function() {
+      var points = [[22.2887, 73.3634]];
+      for (var id in busMarkers) {
+        var latLng = busMarkers[id].getLatLng();
+        points.push([latLng.lat, latLng.lng]);
+      }
+      if (points.length > 1) {
+        var bounds = L.latLngBounds(points);
+        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+      } else {
+        map.setView([22.3000, 73.2800], 12);
+      }
+    };
+
+    // Focus on a specific bus when user selects it from dropdown
+    window.focusBus = function(busId) {
+      if (busMarkers[busId]) {
+        map.setView(busMarkers[busId].getLatLng(), 15);
+        busMarkers[busId].openPopup();
+      }
     };
 
     window.clearBuses = function() {
@@ -154,7 +173,7 @@
     };
 
     window.centerOnCampus = function() {
-      map.setView([22.2887, 73.3634], 15);
+      map.setView([22.2887, 73.3634], 14);
     };
   </script>
 </body>

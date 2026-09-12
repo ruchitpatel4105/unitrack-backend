@@ -172,8 +172,7 @@ public class DriverTripActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 runOnUiThread(() -> {
-                    double speedKmh = location.hasSpeed() ? (location.getSpeed() * 3.6) : 0.0;
-                    tvLiveSpeed.setText(String.format(Locale.US, "%.0f km/h", speedKmh));
+                    tvLiveSpeed.setText("ACTIVE");
 
                     if (location.hasBearing()) {
                         float bearing = location.getBearing();
@@ -207,7 +206,7 @@ public class DriverTripActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, GpsTrackingService.class);
         stopService(serviceIntent);
         locationHelper.stopLocationUpdates();
-        tvLiveSpeed.setText("0 km/h");
+        tvLiveSpeed.setText("STANDBY");
         tvLiveAccuracy.setText("Inactive");
     }
 

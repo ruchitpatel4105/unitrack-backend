@@ -138,7 +138,8 @@ export const LiveFleetMapPage: React.FC = () => {
         <div className="lg:col-span-3 bg-white rounded-3xl p-4 border border-slate-200/80 shadow-sm">
           <MapViewer
             center={mapCenter}
-            zoom={selectedBusId ? 15 : 13}
+            zoom={selectedBusId ? 15 : 12}
+            selectedBusId={selectedBusId}
             buses={busMarkers}
             stops={currentStops}
             routePolyline={routePolyline}
@@ -175,7 +176,7 @@ export const LiveFleetMapPage: React.FC = () => {
                         <span className="font-bold text-sm text-slate-900">{trip.bus_number}</span>
                       </div>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                        {trip.current_speed || 0} km/h
+                        In Transit
                       </span>
                     </div>
 
